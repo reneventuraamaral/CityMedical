@@ -1,0 +1,430 @@
+.input-container {
+    display: flex;
+    justify-content: left;
+    margin: 20px;
+  }
+  
+  .input-container input {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .input-container input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+  }
+
+  .select-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+  }
+  
+  .select-container select {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff; /* Cor de fundo */
+    appearance: none; /* Remove o estilo padrão do navegador */
+    cursor: pointer; /* Altera o cursor ao passar sobre o select */
+  }
+  
+  .select-container select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+  }
+
+  /* Contêiner dos botões */
+.button-container {
+    display: flex;
+    justify-content: center; /* Centraliza os botões horizontalmente */
+    gap: 20px; /* Espaçamento entre os botões */
+    margin-top: 20px;
+  }
+  
+  /* Estilo geral dos botões */
+  .button {
+    padding: 10px 20px; /* Espaçamento interno */
+    font-size: 16px; /* Tamanho do texto */
+    font-weight: bold; /* Texto em negrito */
+    border: 2px solid transparent; /* Borda inicial transparente */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Muda o cursor para indicar interatividade */
+    transition: all 0.3s ease; /* Transição suave para efeitos */
+  }
+  
+  /* Botão de enviar (submit) */
+  .button-submit {
+    background-color: #007bff; /* Cor de fundo azul */
+    color: white; /* Cor do texto */
+  }
+  
+  .button-submit:hover {
+    background-color: #0056b3; /* Azul mais escuro ao passar o mouse */
+    border-color: #0056b3; /* Destaca a borda */
+  }
+  
+  /* Botão de voltar */
+  .button-back {
+    background-color: #86b8eb; /* Cor de fundo cinza claro */
+    color: #333; /* Cor do texto */
+    border: 2px solid #ccc; /* Borda inicial */
+  }
+  
+  .button-back:hover {
+    background-color: #2970b6; /* Cor de fundo mais escura ao passar o mouse */
+    border-color: #adb5bd; /* Destaca a borda */
+  }
+
+   /* Botão de Cancelar */
+   .button-cancelar {
+    background-color: #d8646a; /* Cor de fundo cinza claro */
+    color: #333; /* Cor do texto */
+    border: 2px solid #ccc; /* Borda inicial */
+  }
+  
+  .button-cancelar:hover {
+    background-color: hsl(357, 77%, 34%); /* Cor de fundo mais escura ao passar o mouse */
+    border-color: #adb5bd; /* Destaca a borda */
+  }
+  
+
+  /* Grid */
+.grid {
+	display: grid;
+}
+.grid-template-columns-1 {
+  grid-template-columns: 100px 300px 100px 300px;
+}
+
+/* fr é uma unidade fracional */
+.grid-template-columns-2 {
+	grid-template-columns: 1fr 2fr;
+}
+
+/* minmax define um valor mínimo e máximo para a coluna */
+.grid-template-columns-3 {
+	grid-template-columns: minmax(200px, 1fr) 1fr 1fr;
+}
+
+/* O repeat vai repetir o número de colunas */
+.grid-template-columns-4 {
+	grid-template-columns: repeat(3, 1fr);
+}
+
+/* Auto-fit vai calcular automaticamente o total de colunas */
+.grid-template-columns-5 {
+	grid-template-columns: repeat(auto-fit, 100px);
+}
+
+/* Com o auto-fit realmente é criado um layout responsivo */
+.grid-template-columns-6 {
+	grid-template-columns: repeat(auto-fit, minmax(100px, auto));
+}
+
+/* Com o auto-fit realmente é criado um layout responsivo */
+.grid-template-columns-7 {
+	grid-template-columns: repeat(auto-fill, minmax(100px, auto));
+}
+
+/* Estilos Gerais */
+.item {
+	margin: 5px;
+	background: rgb(181, 189, 212);
+	text-align: center;
+	font-size: 1.0em;
+}
+
+.grid {
+	max-width: 800px;
+	margin: 0 auto;
+	border: 1px solid #ccc;
+}
+
+h1 {
+	text-align: center;
+	font-size: 1.25em;
+	font-weight: normal;
+}
+
+body {
+	font-family: monospace;
+	color: #333;
+	margin: 0px;
+	padding-bottom: 60px;
+}
+
+body > div {
+	padding: 40px 0;
+}
+
+body > div:nth-of-type(even) {
+	background: rgba(0,0,0,.03);
+}
+
+ /* Novos elementos */
+ 
+ .barra-horizontal {
+  background-color: #f87842;
+  height: 5px;
+  width: 100%;
+  
+}
+
+.barra-horizontal-azul {
+  background-color: #66a3e9;
+  height: 5px;
+  width: 100%;
+  
+}
+
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #023047
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    background-color: #480ca8;
+    /*background-image: "/images/city.jpg";*/
+}
+
+.campo-input {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.formLogin {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 7px;
+    padding: 40px;
+    box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.4);
+    gap: 5px
+}
+
+
+.formMenu {
+  display: flex;
+  flex-direction: column;
+  background-color: #f3bfbf;
+  border-radius: 7px;
+  padding: 40px;
+  box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.4);
+  gap: 5px
+}
+.areaLogin img {
+    width: 420px;
+}
+
+.formLogin h1 {
+    padding: 0;
+    margin: 0;
+    font-weight: 500;
+    font-size: 2.3em;
+}
+
+.formLogin p {
+    display: inline-block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.formLogin input {
+    padding: 15px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    border-radius: 4px;
+    transition: all linear 160ms;
+    outline: none;
+}
+
+
+.formLogin input:focus {
+    border: 1px solid #f72585;
+}
+
+.formLogin label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.formLogin a {
+    display: inline-block;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: #555;
+    transition: all linear 160ms;
+}
+
+.formLogin a:hover {
+    color: #f72585;
+}
+
+.btnLogin {
+    background-color: #f72585;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    border: none !important;
+    transition: all linear 160ms;
+    cursor: pointer;
+    margin: 0 !important;
+
+}
+
+.btnLogin:hover {
+    transform: scale(1.05);
+    background-color: #ff0676;
+
+}
+
+.buttonLogin {
+  padding: 10px;
+  align-self: center;
+  width: 160px;
+  border-radius: 30px;
+  background-image: linear-gradient(#256a8a, #3393c1);
+  border: solid 1px #256a8a;
+  border-right-width: 4px;
+  border-bottom-width: 4px;
+  font-size: 16px;
+  color: white;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+  
+.titulo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: content-box;
+}
+
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Ocupa toda a altura da tela */
+  gap: 20px; /* Espaço entre a imagem e o formulário */
+}
+
+.image-container img {
+  width: 450px; /* Tamanho da imagem */
+  height: auto; /* Proporções mantidas */
+  border-radius: 10px; /* Borda arredondada */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+.form-container {
+  max-width: 400px; /* Limita o tamanho do formulário */
+  width: 100%;
+  padding: 20px;
+  border: 1px solid #ddd; /* Borda fina */
+  border-radius: 10px;
+  background-color: #fff; /* Fundo branco */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+.vertical-menu {
+  width: 200px; /* Set a width if you like */
+}
+
+.vertical-menu a {
+  background-color: #eee; /* Grey background color */
+  color: black; /* Black text color */
+  display: block; /* Make the links appear below each other */
+  padding: 12px; /* Add some padding */
+  text-decoration: none; /* Remove underline from links */
+}
+
+.vertical-menu a:hover {
+  background-color: #ccc; /* Dark grey background on mouse-over */
+}
+
+.vertical-menu a.active {
+  background-color: #04AA6D; /* Add a green color to the "active/current" link */
+  color: white;
+}
+
+.box-artigo   { width:100%; float:left; background:#fff; box-shadow: 1px 0px 1.2px 0px #e3e3e3; border-radius:3px; padding:1em; }
+
+/* Centraliza a página inteira */
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Altura da viewport */
+  text-align: center;
+  background-color: #f4f4f4; /* Cor de fundo */
+}
+
+/* Título */
+.titulo {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+}
+
+/* Vertical Menu */
+.vertical-menu {
+  background-color: #fff; /* Fundo branco para o menu */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
+  width: 300px; /* Largura fixa */
+}
+
+/* Estiliza a lista */
+.menu {
+  list-style: none; /* Remove marcadores da lista */
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  margin: 10px 0; /* Espaçamento entre os itens */
+}
+
+.menu li a {
+  text-decoration: none; /* Remove sublinhado */
+  color: #007bff; /* Cor do link */
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.menu li a:hover {
+  text-decoration: underline; /* Adiciona sublinhado ao passar o mouse */
+}
