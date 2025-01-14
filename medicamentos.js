@@ -1,143 +1,121 @@
-import mysql from 'mysql2/promise';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import Layout from '../components/Layout';
 
-const dbConfig = {
-  host: 'marcofriorefrigeracao.com.br', // Host do banco de dados
-  user: 'marcofri_user',      // Usuário do banco de dados
-  password: 'SenhaNova123@', // Senha do banco de dados
-  database: 'marcofri_citymedical', // Nome do banco de dados
-};
+export default function CadastroMedicamentos() {
+    const [searchValue, setSearchValue] = useState('');
+    const [paciente, setPaciente] = useState(null);
+    const [descricao, setDescricao] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [error, setError] = useState('');
+    const router = useRouter();
 
-const connectToDatabase = async () => {
-  const connection = await mysql.createConnection(dbConfig);
-  return connection;
-};
+    // Função para buscar paciente
+    const handleSearch = async () => {
+        try {
+            setError('');
+            const response = await axios.get(`/api/medicamentos?search=${encodeURIComponent(searchValue)}`);
+            setPaciente(response.data[0]); // Assume o primeiro resultado como válido
+        } catch (error) {
+            console.error('Erro ao buscar paciente:', error.response?.data?.message || error.message);
+            setError(error.response?.data?.message || 'Erro ao buscar paciente.');
+        }
+    };
 
-export default async function handler(req, res) {
-  const { method } = req;
+    // Função para cadastrar medicamento
+    const handleCadastro = async () => {
+        if (!paciente) {
+            setError('É necessário buscar um paciente antes de cadastrar.');
+            return;
+        }
 
-  try {
-    const connection = await connectToDatabase();
+        try {
+            setError('');
+            setSuccessMessage('');
+            //const dtPedido = new Date().toISOString().split('T')[0]; // Data no formato YYYY-MM-DD
 
-    if (method === 'GET') {
-      const { search, id } = req.query;
+          /*  const response = await axios.post('/api/medicamentos', {
+                id_paciente: paciente.id_paciente, // Pego do resultado da pesquisa
+                id_medico: paciente.id_medico,     // Pego do resultado da pesquisa
+                id_tratamento: paciente.id_tratamento, // Pego do resultado da pesquisa
+                dt_pedido: dtPedido,               // Data atual
+                descricao,                         // Campo preenchido pelo usuário
+            });*/
 
-      // Validação de parâmetros
-      if (!search && !id) {
-        res.status(400).json({ error: 'Parâmetro de pesquisa ou ID é necessário!' });
-        return;
-      }
+            setSuccessMessage('Medicamento cadastrado com sucesso!');
+            setDescricao(''); // Limpa o campo de descrição
+        } catch (error) {
+            console.error('Erro ao cadastrar medicamento:', error.response?.data?.message || error.message);
+            setError(error.response?.data?.message || 'Erro ao cadastrar medicamento.');
+        }
+    };
 
-      let query;
-      let params;
+    return (
+        <div>
+        <Layout>
+        <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+            <h1>Cadastro de Medicamentos</h1>
 
-      // Busca por ID
-      if (id) {
-        console.log('ID recebido para busca:', id); // Log do ID
-        query = `
-          SELECT 
-                      m.id AS id_medicamento,  p.id AS id_paciente, m.dt_pedido, 
-                      m.dt_manipulacao, m.dt_chegada, m.dt_entrega, m.descricao, 
-                      p.nome AS nome_paciente, t.nome AS nome_tratamento, d.nome AS nome_medico,
-                      t.nome AS nome_tratamento,
-                      CASE 
-                        WHEN (dt_entrega IS NULL) OR (dt_entrega='0000-00-00') 
-                        THEN 'Não retirado' 
-                        ELSE CONCAT('Medicamento Retirado em ',DATE_FORMAT(m.dt_entrega, '%d/%m/%Y'))
-                     END AS st_retirada, co.pago 
-                FROM medicamentos m
-                    JOIN cadpaciente p ON m.id_paciente = p.id
-                    JOIN medicos d ON m.id_medico = d.id
-                    JOIN tratamentos t ON m.id_tratamento = t.id
-                    JOIN contratos co ON m.id_paciente = co.id_paciente
-          WHERE p.id = ?
-        `;
-        params = [id];
-        console.log('Query executada:', query, 'Parâmetros:', params); // Log da query
-      } 
-      // Busca por Nome
-      else {
-        query = `
-    SELECT 
-                      m.id AS id_medicamento,  p.id AS id_paciente, m.dt_pedido, 
-                      m.dt_manipulacao, m.dt_chegada, m.dt_entrega, m.descricao, 
-                      p.nome AS nome_paciente, t.nome AS nome_tratamento, d.nome AS nome_medico,
-                      t.nome AS nome_tratamento,
-                      CASE 
-                        WHEN (dt_entrega IS NULL) OR (dt_entrega='0000-00-00') 
-                        THEN 'Não retirado' 
-                        ELSE CONCAT('Medicamento Retirado em ',DATE_FORMAT(m.dt_entrega, '%d/%m/%Y'))
-                     END AS st_retirada, co.pago 
-                FROM medicamentos m
-                    JOIN cadpaciente p ON m.id_paciente = p.id
-                    JOIN medicos d ON m.id_medico = d.id
-                    JOIN tratamentos t ON m.id_tratamento = t.id
-                    JOIN contratos co ON m.id_paciente = co.id_paciente
-          WHERE p.nome LIKE ?
-        `;
-        params = [`%${search}%`];
-      }
+            {/* Busca do paciente */}
+            <div style={{ marginBottom: '20px' }}>
+                <label>Pesquisar por ID ou Nome do Paciente:</label>
+                <input
+                    type="text"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    style={{ marginLeft: '10px', padding: '5px' }}
+                />
+                <button onClick={handleSearch} style={{ marginLeft: '10px', padding: '5px 10px' }}>
+                    Pesquisar
+                </button>
+            </div>
 
-      const [rows] = await connection.execute(query, params);
+            {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+            {successMessage && <div style={{ color: 'green', marginBottom: '10px' }}>{successMessage}</div>}
 
-      if (rows.length > 0) {
-        res.status(200).json(rows);
-      } else {
-        res.status(404).json({ message: 'Nenhum registro encontrado.' });
-      }
-      console.log('Parâmetros recebidos na API:', { id, search });
-      console.log('Query executada:', query, 'Parâmetros:', params);
+            {/* Dados do paciente */}
+            {paciente && (
+                <div style={{ marginBottom: '20px' }}>
+                    <h3>Dados do Paciente</h3>
+                    <p><strong>ID Paciente:</strong> {paciente.id_paciente}</p>
+                    <p><strong>Nome:</strong> {paciente.nome_paciente}</p>
+                    <p><strong>ID Médico:</strong> {paciente.id_medico}</p>
+                    <p><strong>ID Tratamento:</strong> {paciente.id_tratamento}</p>
+                </div>
+            )}
 
+            {/* Formulário de cadastro */}
+            <div>
+                <h3>Descrição do Medicamento</h3>
+                <textarea
+                    value={descricao}
+                    onChange={(e) => setDescricao(e.target.value)}
+                    placeholder="Digite a descrição do medicamento"
+                    style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+                />
+                <button onClick={handleCadastro} style={{ padding: '10px 20px' }}>
+                    Cadastrar Medicamento
+                </button>
+            </div>
 
-    }
-
-    // Adicionar Medicamentos
-    if (method === 'POST') {
-      const { id_paciente, id_medico, id_tratamento, dt_pedido, descricao } = req.body;
-
-      if (!id_paciente || !id_medico || !id_tratamento || !dt_pedido || !descricao) {
-        res.status(400).json({ error: 'Todos os campos são obrigatórios!' });
-        return;
-      }
-
-      await connection.execute(
-        `
-        INSERT INTO medicamentos (id_paciente, id_medico, id_tratamento, dt_pedido, descricao)
-        VALUES (?, ?, ?, ?, ?)
-        `,
-        [id_paciente, id_medico, id_tratamento, dt_pedido, descricao]
-      );
-
-      res.status(200).json({ message: 'Medicamento cadastrado com sucesso!' });
-    }
-
-    // Atualizar Medicamentos
-    if (method === 'PUT') {
-      const { id } = req.query;
-      const { dt_manipulacao, dt_chegada, dt_entrega } = req.body;
-
-      if (!id || (!dt_manipulacao && !dt_chegada && !dt_entrega)) {
-        res.status(400).json({ error: 'ID e pelo menos uma data são obrigatórios!' });
-        return;
-      }
-
-      await connection.execute(
-        `
-        UPDATE medicamentos
-        SET 
-          dt_manipulacao = ?, 
-          dt_chegada = ?, 
-          dt_entrega = ?
-        WHERE id = ?
-        `,
-        [dt_manipulacao, dt_chegada, dt_entrega, id]
-      );
-
-      res.status(200).json({ message: 'Medicamento atualizado com sucesso!' });
-    }
-
-    connection.end();
-  } catch (error) {
-    console.error('Erro no servidor:', error);
-    res.status(500).json({ error: 'Erro no servidor.' });
-  }
+           {/* Botão Voltar */}
+           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+               <button onClick={() => router.push('/menu')} 
+                     style={{
+                     padding: '10px 20px',
+                     backgroundColor: '#6c757d',
+                     color: '#fff',
+                     border: 'none',
+                     borderRadius: '5px',
+                     cursor: 'pointer',
+                 }}
+               >
+               Voltar ao Menu
+               </button>
+           </div>
+        </div>
+        </Layout>
+        </div> 
+    );
 }
