@@ -1,16 +1,5 @@
-import mysql from 'mysql2/promise';
-
-const dbConfig = {
-  host: 'marcofriorefrigeracao.com.br', // Host do banco de dados
-  user: 'marcofri_user',      // Usuário do banco de dados
-  password: 'SenhaNova123@', // Senha do banco de dados
-  database: 'marcofri_citymedical', // Nome do banco de dados
-};
-
-const connectToDatabase = async () => {
-  const connection = await mysql.createConnection(dbConfig);
-  return connection;
-};
+//import mysql from 'mysql2/promise';
+import { connectToDatabase } from  '../../lib/db';
 
 export default async function handler(req, res) {
   const { method } = req;
@@ -62,7 +51,7 @@ export default async function handler(req, res) {
       res.status(404).json({ message: 'Medicamento não encontrado.' });
     }
 
-    connection.end();
+    //connection.end();
   } catch (error) {
     console.error('Erro no servidor:', error);
     res.status(500).json({ error: 'Erro no servidor.' });

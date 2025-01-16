@@ -1,11 +1,12 @@
-import mysql from 'mysql2/promise';
+//import mysql from 'mysql2/promise';
+import { connectToDatabase } from  '../../lib/db';
 
-const dbConfig = {
+/* const dbConfig = {
   host: 'marcofriorefrigeracao.com.br', // Host do banco de dados
   user: 'marcofri_user',      // Usuário do banco de dados
   password: 'SenhaNova123@', // Senha do banco de dados
   database: 'marcofri_citymedical', // Nome do banco de dados
-};
+}; */
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -19,7 +20,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const connection = await mysql.createConnection(dbConfig);
+    //const connection = await mysql.createConnection(dbConfig);
+    const connection = await connectToDatabase();
 
     const [rows] = await connection.execute(
       'SELECT * FROM usuarios WHERE usuario = ? AND senha = ?',

@@ -13,7 +13,7 @@ export default function Menu() {
         
         <div className="titulo">
           <h3>Menu Principal</h3>
-          <div class="barra-horizontal-azul" style={{alignItems: 'center'}}></div>
+          <div className="barra-horizontal-azul" style={{alignItems: 'center'}}></div>
           <h6 style={{ textAlign: 'right' }}>{linhausuario}</h6>
         </div>
         <div className="vertical-menu">
