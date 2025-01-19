@@ -1,15 +1,19 @@
 import { connectToDatabase } from '../../lib/db';
 
 export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    const { usuario, senha } = req.body;
+  let pool; // Definindo a variável pool
+  try {
+    if (req.method === 'POST') {
+      const { usuario, senha } = req.body;
 
-    if (!usuario || !senha) {
-      return res.status(400).json({ message: 'Usuário ou senha não fornecidos.' });
-    }
+      if (!usuario || !senha) {
+        return res.status(400).json({ message: 'Usuário ou senha não fornecidos.' });
+      }
 
-    try {
-      const pool = await connectToDatabase();
+      // Conexão com o banco de dados
+      pool = await connectToDatabase();
+
+      // Consulta ao banco
       const [rows] = await pool.query(
         'SELECT * FROM usuarios WHERE usuario = ? AND senha = ?',
         [usuario, senha]
@@ -20,11 +24,16 @@ export default async function handler(req, res) {
       } else {
         res.status(401).json({ message: 'Usuário ou senha inválidos.' });
       }
-    } catch (error) {
-      console.error('Erro ao processar login:', error);
-      res.status(500).json({ message: 'Erro interno do servidor.' });
+    } else {
+      res.status(405).json({ message: 'Método não permitido.' });
     }
-  } else {
-    res.status(405).json({ message: 'Método não permitido.' });
+  } catch (error) {
+    console.error('Erro ao processar login:', error);
+    res.status(500).json({ message: 'Erro interno do servidor.' });
+  } finally {
+    // Certifique-se de que a conexão seja fechada apenas se ela existir
+    if (pool) {
+      await pool.end();
+    }
   }
 }

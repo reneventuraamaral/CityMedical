@@ -82,7 +82,7 @@ export default function Tratamentos() {
     });
 
     if (res.ok) {
-      alert(editId ? 'Tratamento atualizado!' : 'Tratamnemto cadastrado!');
+      alert(editId ? 'Tratamento atualizado!' : 'Tratamento cadastrado!');
       setNome('');
       setDtCad('');
       setDuracao('');
@@ -97,7 +97,7 @@ export default function Tratamentos() {
     const tratamento = tratamentos.find((tratamento) => tratamento.id === id); // Encontra o médico na lista
     if (tratamento) {
       setEditId(tratamento.id); // Define o ID para edição
-      setNome(tratamento.veiculo || '');
+      setDuracao(tratamento.duracao || '');
       setNome(tratamento.nome || '');
       setDtCad(formatDateForInput(tratamento.dtcad) || ''); // Formata a data para o input de tipo date
       } else {

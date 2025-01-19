@@ -16,6 +16,7 @@ export default async function handler(req, res) {
       cep,
       dtnascimento,
       id_usuario,
+      id_unidade,
     } = req.body;
 
     // Validação dos campos obrigatórios
@@ -31,9 +32,9 @@ export default async function handler(req, res) {
       const query = `
         INSERT INTO cadpaciente (
           nome, cpf, idpropag, telefone, logradouro, numero, complemento,
-          bairro, cidade, uf, cep, dtnascimento, id_usuario, dtcad
+          bairro, cidade, uf, cep, dtnascimento, id_usuario, dtcad, id_unidade
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)
       `;
 
       const values = [
@@ -50,16 +51,19 @@ export default async function handler(req, res) {
         cep,
         dtnascimento,
         id_usuario,
+        id_unidade,
       ];
 
       await connection.execute(query, values);
 
       // Fechar conexão e enviar resposta
-      connection.end();
+      //connection.end();
       res.status(201).json({ message: 'Paciente cadastrado com sucesso!' });
     } catch (error) {
       console.error('Erro ao cadastrar paciente:', error);
       res.status(500).json({ message: 'Erro no servidor.' });
+    } finally {
+      if (connection) await connection.end(); // Fecha a conexão após o uso
     }
   } else {
     res.status(405).json({ message: 'Método não permitido' });

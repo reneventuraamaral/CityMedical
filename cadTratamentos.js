@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { nome, dtcad, duracao, id_usuario } = req.body;
 
-    if (!veiculo || !nome) {
+    if (!duracao || !nome) {
       return res.status(400).json({ message: 'Nome e duração são obrigatórios.' });
     }
 
@@ -29,6 +29,8 @@ export default async function handler(req, res) {
     } catch (error) {
       console.error('Erro ao conectar ao banco de dados:', error);
       res.status(500).json({ message: 'Erro interno do servidor.' });
+    }finally {
+      if (connection) await connection.end(); // Fecha a conexão após o uso
     }
   } else {
     res.status(405).json({ message: 'Método não permitido.' });

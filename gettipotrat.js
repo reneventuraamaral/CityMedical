@@ -7,15 +7,9 @@ export default async function handler(req, res) {
     try {
       // Configuração de conexão com o banco de dados
       const connection = await connectToDatabase();
-     /*  const connection = await mysql.createConnection({
-        host: 'localhost',        // Host do banco de dados
-        user: 'root',      // Usuário do banco
-        password: '',    // Senha do banco
-        database: 'citymedical' // Nome do banco de dados
-      }) */;
-
+    
       // Consulta SQL para buscar os dados da tabela tipotrat
-      const [rows] = await connection.execute('SELECT id, nome, duracao FROM tipotrat');
+      const [rows] = await connection.query('SELECT id, nome, duracao FROM tipotrat');
 
       // Retorna os dados em formato JSON
       res.status(200).json(rows);
@@ -25,6 +19,8 @@ export default async function handler(req, res) {
     } catch (error) {
       console.error('Erro ao buscar dados:', error);
       res.status(500).json({ message: 'Erro interno do servidor.' });
+    } finally {
+      if (connection) await connection.end(); // Fecha a conexão após o uso
     }
   } else {
     res.setHeader('Allow', ['GET']);

@@ -1,28 +1,17 @@
-//import mysql from 'mysql2/promise';
-import { connectToDatabase } from  '../../lib/db';
+import { connectToDatabase } from '../../lib/db';
 
 export default async function handler(req, res) {
-  const { method } = req;
-
-  if (method !== 'GET') {
-    res.status(405).json({ message: 'Método não permitido. Use GET.' });
-    return;
-  }
-
-  const { id } = req.query;
-
-  if (!id) {
-    res.status(400).json({ error: 'ID do medicamento é necessário!' });
-    return;
-  }
-
   try {
-    const connection = await connectToDatabase();
+    const { id } = req.query;
 
-    console.log('ID recebido para busca do medicamento:', id);
+    if (!id) {
+      return res.status(400).json({ message: 'ID do medicamento é obrigatório.' });
+    }
+
+    const pool = await connectToDatabase();
 
     const query = `
-      SELECT 
+     SELECT 
                       m.id AS id_medicamento,  p.id AS id_paciente, m.dt_pedido, 
                       m.dt_manipulacao, m.dt_chegada, m.dt_entrega, m.descricao, 
                       p.nome AS nome_paciente, t.nome AS nome_tratamento, d.nome AS nome_medico,
@@ -37,23 +26,19 @@ export default async function handler(req, res) {
                     JOIN medicos d ON m.id_medico = d.id
                     JOIN tratamentos t ON m.id_tratamento = t.id
                     JOIN contratos co ON m.id_paciente = co.id_paciente
-      WHERE m.id = ?
+      WHERE m.id = ?;
     `;
 
-    const params = [id];
-    const [rows] = await connection.execute(query, params);
-    console.log('ID recebido para busca do medicamento:', id);
+    // **Corrigido**: Passar `id` como um array
+    const [rows] = await pool.execute(query, [id]);
 
-
-    if (rows.length > 0) {
-      res.status(200).json(rows[0]); // Retorna apenas o primeiro registro
-    } else {
-      res.status(404).json({ message: 'Medicamento não encontrado.' });
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Nenhum medicamento encontrado com esse ID.' });
     }
 
-    //connection.end();
+    res.status(200).json(rows[0]);
   } catch (error) {
-    console.error('Erro no servidor:', error);
-    res.status(500).json({ error: 'Erro no servidor.' });
+    console.error('Erro ao buscar medicamento:', error);
+    res.status(500).json({ message: 'Erro ao buscar medicamento.' });
   }
 }

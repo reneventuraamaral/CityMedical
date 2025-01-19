@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     //const connection = await mysql.createConnection(dbConfig);
     const connection = await connectToDatabase();
 
-    const [rows] = await connection.execute(
+    const [rows] = await connection.query(
       'SELECT * FROM usuarios WHERE usuario = ? AND senha = ?',
       [usuario, senha]
     );
@@ -44,5 +44,7 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Erro no servidor:', error);
     res.status(500).json({ message: 'Erro no servidor' });
+  } finally {
+    if (connection) await connection.end(); // Fecha a conexão após o uso
   }
 }

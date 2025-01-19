@@ -20,7 +20,7 @@ export default async function handler(req, res) {
               
             } 
 
-            const [rows] = await db.execute(query, params);
+            const [rows] = await db.query(query, params);
 
             if (rows.length > 0) {
                 res.status(200).json(rows);
@@ -28,13 +28,15 @@ export default async function handler(req, res) {
                 res.status(404).json({ message: 'Paciente não encontrado' });
             }
 
-            await db.end();
+           //await db.end();
         } catch (error) {
             console.error('Erro no servidor:', error.message); // Log detalhado
             console.log('Query recebida:', req.query);
 
             res.status(500).json({ message: 'Erro no servidor', error: error.message });
-        }
+        } finally {
+            if (db) await db.end(); // Fecha a conexão após o uso
+          }
     } else {
         res.status(405).json({ message: 'Método não permitido' });
     }

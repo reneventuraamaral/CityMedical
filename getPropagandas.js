@@ -11,7 +11,7 @@ export default async function handler(req, res) {
       console.log('Dados recebidos:', req.body);
 
       const query = 'SELECT id, veiculo, nome, dtcad, id_usuario FROM propagandas';
-      const [rows] = await connection.execute('SELECT id, veiculo, nome, dtcad, id_usuario FROM propagandas');
+      const [rows] = await connection.query('SELECT id, veiculo, nome, dtcad, id_usuario FROM propagandas');
 
       console.log('Tentando executar a query:', query);
 
@@ -24,6 +24,8 @@ export default async function handler(req, res) {
     } catch (error) {
       console.error('Erro ao buscar propagandas:', error);
       res.status(500).json({ message: 'Erro interno do servidor.' });
+    } finally {
+      if (connection) await connection.end(); // Fecha a conexão após o uso
     }
   } else {
     res.setHeader('Allow', ['GET']);
