@@ -35,7 +35,7 @@ export default async function handler(req, res) {
 
             res.status(500).json({ message: 'Erro no servidor', error: error.message });
         } finally {
-            if (db) await db.end(); // Fecha a conexão após o uso
+           // if (db) await db.end(); // Fecha a conexão após o uso
           }
     } else {
         res.status(405).json({ message: 'Método não permitido' });

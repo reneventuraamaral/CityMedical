@@ -4,8 +4,9 @@ import { useUser } from '../context/UserContext'; // Importa o contexto
 
 export default function Menu() {
   const { user } = useUser(); // Mova o hook para dentro do componente funcional
+  
   const linhausuario = user ? `Bem-vindo,  ${user.nome} ' - ' ${user.desctipo} ` : 'Não logado';
-  console.log('Usuário: ', user.nome, 'Tipo: ', user.desctipo);
+  console.log('Usuário: ', linhausuario);
   if (!user) {
     return <p>Você precisa estar logado para acessar esta página.</p>;
   }
@@ -49,33 +50,7 @@ export default function Menu() {
             </>
           )}
             <li><Link href="/login"> Voltar ao Login</Link></li>
-           {/*  <li>
-              <Link href="/cadpaciente">Cadastro de Pacientes</Link> 
-            </li>
-            <li>
-              <Link href="/medicos">Cadastro de Médicos</Link>
-            </li>
-            <li>
-              <Link href="/propaganda"> Cadastro de Propaganda</Link>
-            </li>
-            <li>
-              <Link href="/tratamentos"> Cadastro de Tratamentos</Link>
-            </li>
-            <li>
-              <Link href="/medicamentos"> Cadastrar Medicamentos</Link>
-            </li>
-            <li>
-              <Link href="/medicamentos/atualizar"> Atualizar ou Entregar Medicamentos </Link>
-            </li>
-            <li>
-              <Link href="/contratos"> Cadastro de Contratos e Pagamentos</Link>
-            </li>
-            <li>
-              <Link href="/consulta"> Consulta Médica</Link>
-            </li>
-            <li>
-              <Link href="/login"> Voltar ao Login</Link>
-            </li> */}
+         
           </ul>
         </div>
       </Layout>

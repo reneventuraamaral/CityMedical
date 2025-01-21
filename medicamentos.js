@@ -1,11 +1,11 @@
-import { connectToDatabase } from '../../lib/db';
+//import { connectToDatabase } from '../../lib/db';
 
 export default async function handler(req, res) {
   let pool;
 
   try {
     // Conectar ao banco
-    const pool = await connectToDatabase();
+   // const pool = await connectToDatabase();
 
     if (req.method === 'GET') {
       const { search } = req.query;

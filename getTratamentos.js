@@ -23,6 +23,6 @@ export default async function handler(req, res) {
     console.error('Erro ao buscar tratamentos:', error);
     res.status(500).json({ message: 'Erro ao buscar tratamentos' });
   } finally {
-    if (connection) await connection.end(); // Fecha a conexão após o uso
+    //if (connection) await connection.end(); // Fecha a conexão após o uso
   }
 }

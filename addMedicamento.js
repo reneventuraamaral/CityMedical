@@ -31,7 +31,7 @@ export default async function handler(req, res) {
             console.error('Erro ao cadastrar medicamento:', error);
             res.status(500).json({ message: 'Erro interno do servidor.' });
         }finally {
-            if (db) await db.end(); // Fecha a conexão após o uso
+            //if (db) await db.end(); // Fecha a conexão após o uso
           }
     } else {
         res.status(405).json({ message: 'Método não permitido.' });

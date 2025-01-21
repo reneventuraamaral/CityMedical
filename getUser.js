@@ -45,6 +45,6 @@ export default async function handler(req, res) {
     console.error('Erro no servidor:', error);
     res.status(500).json({ message: 'Erro no servidor' });
   } finally {
-    if (connection) await connection.end(); // Fecha a conexão após o uso
+    //if (connection) await connection.end(); // Fecha a conexão após o uso
   }
 }

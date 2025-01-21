@@ -12,8 +12,8 @@ export default async function handler(req, res) {
     try {
       const connection = await connectToDatabase();
       const [dadosPaciente] = await connection.query('SELECT * FROM cadpaciente WHERE id = ?', [id]);
-      const [prescricoes] = await connection.query('SELECT * FROM prescricoes WHERE id_paciente = ?', [id]);
-      const [receitas] = await connection.query('SELECT * FROM receitas WHERE id_paciente = ?', [id]);
+      const [prescricoes] = await connection.query('SELECT * FROM fichamedica WHERE id_paciente = ?', [id]);
+      const [receitas] = await connection.query('SELECT * FROM receituarios WHERE id_paciente = ?', [id]);
 
       res.status(200).json({ dadosPaciente, prescricoes, receitas });
     } catch (error) {

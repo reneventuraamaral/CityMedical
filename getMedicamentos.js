@@ -1,8 +1,8 @@
-import { connectToDatabase } from '../../lib/db';
+//import { connectToDatabase } from '../../lib/db';
 
 export default async function handler(req, res) {
   try {
-    const pool = await connectToDatabase(); // Use o pool de conexões
+    //const pool = await connectToDatabase(); // Use o pool de conexões
 
     //const { search } = req.query;
     const { search, id } = req.query;
@@ -59,6 +59,7 @@ export default async function handler(req, res) {
           WHERE p.nome LIKE ?
         `;
         params = [`%${search}%`];
+        console.log('Query executada:', query, 'Parâmetros:', params); // Log da query
       }
 
       const [rows] = await connection.execute(query, params);
