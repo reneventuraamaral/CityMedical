@@ -1,5 +1,3 @@
-// pages/api/gettipotrat.js
-//import mysql from 'mysql2/promise';
 import { connectToDatabase } from  '../../lib/db';
 
 export default async function handler(req, res) {

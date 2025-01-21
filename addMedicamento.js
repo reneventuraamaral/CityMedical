@@ -1,4 +1,3 @@
-//import mysql from 'mysql2/promise';
 import { connectToDatabase } from '../../lib/db';
 
 export default async function handler(req, res) {
@@ -11,16 +10,6 @@ export default async function handler(req, res) {
 
         try {
             const db = await connectToDatabase();
-         /*    const db = await mysql.createConnection({
-                host: 'marcofriorefrigeracao.com.br', // Host do banco de dados
-                user: 'marcofri_user',      // Usuário do banco de dados
-                password: 'SenhaNova123@', // Senha do banco de dados
-                database: 'marcofri_citymedical', // Nome do banco de dados
-                waitForConnections: true,
-                connectionLimit: 10,
-                queueLimit: 0,
-            }); */
-
             const [result] = await db.execute(
                 'INSERT INTO medicamentos (id_paciente, id_medico, id_tratamento, dt_pedido, desc) VALUES (?, ?, ?, NOW(), ?)',
                 [id_paciente, id_medico, id_tratamento, desc]

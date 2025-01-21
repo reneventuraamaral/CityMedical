@@ -1,8 +1,6 @@
-//import { useEffect, useState } from 'react';
+
 import {useState } from 'react';
 import { useUser } from '../context/UserContext';
-//import React, { useState } from 'react';
-//import axios from 'axios';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 
@@ -16,14 +14,9 @@ export default function Tratamentos() {
   const [dtcad, setDtCad] = useState('');
   const router = useRouter();
   const [editId, setEditId] = useState(null);
-  //const [id_usuario, setId_Usuario] = useState('');
-
+  
  
-  /*const estados = [
-    'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO',
-    'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI',
-    'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
-  ];*/
+  
 
   if (!user) {
     return <p>Você precisa estar logado para acessar esta página.</p>;

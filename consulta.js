@@ -8,9 +8,6 @@ export default function Consultas() {
   // Hooks devem estar dentro do componente
   const [obs, setObs] = useState('');
   const [dtconsulta, setDtconsulta] = useState('');
- // const [id_medico, setIdmedico] = useState('');
- // const [id_paciente, setIdpaciente] = useState('');
- // const [editId, setEditId] = useState(null);
   const [activeTab, setActiveTab] = useState('consulta'); // Aba ativa
   const [pacientes, setPacientes] = useState([]);
   const [selectedPaciente, setSelectedPaciente] = useState('');
@@ -124,23 +121,7 @@ function gerarReceitas() {
   doc.save('receita.pdf');
 }
 
-
- /*  useEffect(() => {
-    if (selectedPaciente) {
-      const fetchDadosPaciente = async () => {
-        try {
-          const res = await fetch(`/api/getPacienteDados?id=${selectedPaciente}`);
-          const data = await res.json();
-          console.log('Dados do Paciente:', data);
-          // Atualize os estados ou exiba os dados nas abas
-        } catch (error) {
-          console.error('Erro ao buscar dados do paciente:', error);
-        }
-      };
-      fetchDadosPaciente();
-    }
-  }, [selectedPaciente]); */
-  
+ 
   console.log('Usuario:', user);
   console.log('Tipo do Usuário:', user.tipousuario);
 
