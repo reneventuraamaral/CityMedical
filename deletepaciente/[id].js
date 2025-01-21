@@ -1,13 +1,1 @@
-import { connectToDatabase } from '../../../lib/db';
-
-export default async function handler(req, res) {
-  const { id } = req.query;
-  const db = await connectToDatabase();
-
-  if (req.method === 'DELETE') {
-    await db.execute('DELETE FROM cadpaciente WHERE id=?', [id]);
-    res.status(200).json({ message: 'Paciente excluído!' });
-  } else {
-    res.status(405).json({ message: 'Método não permitido' });
-  }
-}
+"use strict";(()=>{var e={};e.id=9219,e.ids=[9219],e.modules={5600:e=>{e.exports=require("next/dist/compiled/next-server/pages-api.runtime.prod.js")},6762:(e,t)=>{Object.defineProperty(t,"M",{enumerable:!0,get:function(){return function e(t,i){return i in t?t[i]:"then"in t&&"function"==typeof t.then?t.then(t=>e(t,i)):"function"==typeof t&&"default"===i?t:void 0}}})},3065:(e,t,i)=>{i.r(t),i.d(t,{config:()=>c,default:()=>s,routeModule:()=>l});var n={};i.r(n),i.d(n,{default:()=>d});var r=i(9947),a=i(325),o=i(6762),u=i(3209);async function d(e,t){let{id:i}=e.query,n=await (0,u.$)();"DELETE"===e.method?(await n.execute("DELETE FROM cadpaciente WHERE id=?",[i]),t.status(200).json({message:"Paciente exclu\xeddo!"})):t.status(405).json({message:"M\xe9todo n\xe3o permitido"})}let s=(0,o.M)(n,"default"),c=(0,o.M)(n,"config"),l=new r.PagesAPIRouteModule({definition:{kind:a.A.PAGES_API,page:"/api/deletepaciente/[id]",pathname:"/api/deletepaciente/[id]",bundlePath:"",filename:""},userland:n})},3209:(e,t,i)=>{let n;i.d(t,{$:()=>o});let r=require("mysql2/promise");var a=i.n(r);let o=async()=>(n||(n=a().createPool({host:"marcofriorefrigeracao.com.br",user:"marcofri_user",password:"SenhaNova123@",database:"marcofri_citymedical",waitForConnections:!0,connectionLimit:10,queueLimit:0})),n)},325:(e,t)=>{Object.defineProperty(t,"A",{enumerable:!0,get:function(){return i}});var i=function(e){return e.PAGES="PAGES",e.PAGES_API="PAGES_API",e.APP_PAGE="APP_PAGE",e.APP_ROUTE="APP_ROUTE",e.IMAGE="IMAGE",e}({})},9947:(e,t,i)=>{e.exports=i(5600)}};var t=require("../../../webpack-api-runtime.js");t.C(e);var i=t(t.s=3065);module.exports=i})();

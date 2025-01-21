@@ -5,8 +5,8 @@
   "devFiles": [],
   "ampDevFiles": [],
   "lowPriorityFiles": [
-    "static/c5sDaliGR0qlVvHeorGjn/_buildManifest.js",
-    "static/c5sDaliGR0qlVvHeorGjn/_ssgManifest.js"
+    "static/CIqoiDANqKrptkpMAxa22/_buildManifest.js",
+    "static/CIqoiDANqKrptkpMAxa22/_ssgManifest.js"
   ],
   "rootMainFiles": [
     "static/chunks/webpack-202926551af8a448.js",
@@ -34,7 +34,7 @@
       "static/chunks/framework-98a94c2940f95c8d.js",
       "static/chunks/main-9c23de246eb09528.js",
       "static/chunks/965-f44b6053c90eb89e.js",
-      "static/chunks/pages/cadpaciente-c5d2423ec5dc677b.js"
+      "static/chunks/pages/cadpaciente-9958660e58b7f761.js"
     ],
     "/consulta": [
       "static/chunks/webpack-202926551af8a448.js",
@@ -43,14 +43,14 @@
       "static/chunks/e78312c5-61481ce5caad2ad9.js",
       "static/chunks/965-f44b6053c90eb89e.js",
       "static/chunks/394-b6be906fa7766f6f.js",
-      "static/chunks/pages/consulta-588c8444251426d4.js"
+      "static/chunks/pages/consulta-6e9a3526faddd4b6.js"
     ],
     "/login": [
       "static/chunks/webpack-202926551af8a448.js",
       "static/chunks/framework-98a94c2940f95c8d.js",
       "static/chunks/main-9c23de246eb09528.js",
       "static/chunks/965-f44b6053c90eb89e.js",
-      "static/chunks/pages/login-eb5b3b802bfc8b23.js"
+      "static/chunks/pages/login-15e0c74ec6d9dd49.js"
     ],
     "/medicamentos": [
       "static/chunks/webpack-202926551af8a448.js",
@@ -58,7 +58,7 @@
       "static/chunks/main-9c23de246eb09528.js",
       "static/chunks/965-f44b6053c90eb89e.js",
       "static/chunks/335-18041e23217b1637.js",
-      "static/chunks/pages/medicamentos-282f77acc49e886f.js"
+      "static/chunks/pages/medicamentos-d08b3ad1653db9d1.js"
     ],
     "/medicamentos/atualizar": [
       "static/chunks/webpack-202926551af8a448.js",
@@ -88,7 +88,7 @@
       "static/chunks/framework-98a94c2940f95c8d.js",
       "static/chunks/main-9c23de246eb09528.js",
       "static/chunks/965-f44b6053c90eb89e.js",
-      "static/chunks/pages/medicos-14ad5133e7ca0815.js"
+      "static/chunks/pages/medicos-9628c4d5a7eadd76.js"
     ],
     "/menu": [
       "static/chunks/webpack-202926551af8a448.js",
@@ -102,14 +102,14 @@
       "static/chunks/framework-98a94c2940f95c8d.js",
       "static/chunks/main-9c23de246eb09528.js",
       "static/chunks/965-f44b6053c90eb89e.js",
-      "static/chunks/pages/propaganda-922a423aece065b0.js"
+      "static/chunks/pages/propaganda-88e94d2d96e17136.js"
     ],
     "/tratamentos": [
       "static/chunks/webpack-202926551af8a448.js",
       "static/chunks/framework-98a94c2940f95c8d.js",
       "static/chunks/main-9c23de246eb09528.js",
       "static/chunks/965-f44b6053c90eb89e.js",
-      "static/chunks/pages/tratamentos-acef0f9831387653.js"
+      "static/chunks/pages/tratamentos-731ffa07fa180852.js"
     ]
   },
   "ampFirstPages": []

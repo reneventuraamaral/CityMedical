@@ -1,14 +1,1 @@
-import { connectToDatabase } from '../../../lib/db';
-
-export default async function handler(req, res) {
-  const { id } = req.query;
-  const { nome, dtcad, duracao, id_usuario } = req.body;
-  const db = await connectToDatabase();
-
-  if (req.method === 'PUT') {
-    await db.execute('UPDATE tratamentos SET nome=?, dtcad=?, duracao=?,id_usuario=? WHERE id=?', [nome, dtcad, duracao, id_usuario, id]);
-    res.status(200).json({ message: 'Propaganda atualizado!' });
-  } else {
-    res.status(405).json({ message: 'Método não permitido' });
-  }
-}
+"use strict";(()=>{var e={};e.id=2658,e.ids=[2658],e.modules={5600:e=>{e.exports=require("next/dist/compiled/next-server/pages-api.runtime.prod.js")},6762:(e,t)=>{Object.defineProperty(t,"M",{enumerable:!0,get:function(){return function e(t,a){return a in t?t[a]:"then"in t&&"function"==typeof t.then?t.then(t=>e(t,a)):"function"==typeof t&&"default"===a?t:void 0}}})},926:(e,t,a)=>{a.r(t),a.d(t,{config:()=>c,default:()=>s,routeModule:()=>m});var r={};a.r(r),a.d(r,{default:()=>d});var n=a(9947),o=a(325),i=a(6762),u=a(3209);async function d(e,t){let{id:a}=e.query,{nome:r,dtcad:n,duracao:o,id_usuario:i}=e.body,d=await (0,u.$)();"PUT"===e.method?(await d.execute("UPDATE tratamentos SET nome=?, dtcad=?, duracao=?,id_usuario=? WHERE id=?",[r,n,o,i,a]),t.status(200).json({message:"Tratamento atualizado!"})):t.status(405).json({message:"M\xe9todo n\xe3o permitido"})}let s=(0,i.M)(r,"default"),c=(0,i.M)(r,"config"),m=new n.PagesAPIRouteModule({definition:{kind:o.A.PAGES_API,page:"/api/updateTratamentos/[id]",pathname:"/api/updateTratamentos/[id]",bundlePath:"",filename:""},userland:r})},3209:(e,t,a)=>{let r;a.d(t,{$:()=>i});let n=require("mysql2/promise");var o=a.n(n);let i=async()=>(r||(r=o().createPool({host:"marcofriorefrigeracao.com.br",user:"marcofri_user",password:"SenhaNova123@",database:"marcofri_citymedical",waitForConnections:!0,connectionLimit:10,queueLimit:0})),r)},325:(e,t)=>{Object.defineProperty(t,"A",{enumerable:!0,get:function(){return a}});var a=function(e){return e.PAGES="PAGES",e.PAGES_API="PAGES_API",e.APP_PAGE="APP_PAGE",e.APP_ROUTE="APP_ROUTE",e.IMAGE="IMAGE",e}({})},9947:(e,t,a)=>{e.exports=a(5600)}};var t=require("../../../webpack-api-runtime.js");t.C(e);var a=t(t.s=926);module.exports=a})();

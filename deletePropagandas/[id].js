@@ -1,13 +1,1 @@
-import { connectToDatabase } from '../../../lib/db';
-
-export default async function handler(req, res) {
-  const { id } = req.query;
-  const db = await connectToDatabase();
-
-  if (req.method === 'DELETE') {
-    await db.execute('DELETE FROM propagandas WHERE id=?', [id]);
-    res.status(200).json({ message: 'Propaganda excluída!' });
-  } else {
-    res.status(405).json({ message: 'Método não permitido' });
-  }
-}
+"use strict";(()=>{var e={};e.id=854,e.ids=[854],e.modules={5600:e=>{e.exports=require("next/dist/compiled/next-server/pages-api.runtime.prod.js")},6762:(e,t)=>{Object.defineProperty(t,"M",{enumerable:!0,get:function(){return function e(t,a){return a in t?t[a]:"then"in t&&"function"==typeof t.then?t.then(t=>e(t,a)):"function"==typeof t&&"default"===a?t:void 0}}})},4073:(e,t,a)=>{a.r(t),a.d(t,{config:()=>c,default:()=>s,routeModule:()=>P});var r={};a.r(r),a.d(r,{default:()=>d});var n=a(9947),i=a(325),o=a(6762),u=a(3209);async function d(e,t){let{id:a}=e.query,r=await (0,u.$)();"DELETE"===e.method?(await r.execute("DELETE FROM propagandas WHERE id=?",[a]),t.status(200).json({message:"Propaganda exclu\xedda!"})):t.status(405).json({message:"M\xe9todo n\xe3o permitido"})}let s=(0,o.M)(r,"default"),c=(0,o.M)(r,"config"),P=new n.PagesAPIRouteModule({definition:{kind:i.A.PAGES_API,page:"/api/deletePropagandas/[id]",pathname:"/api/deletePropagandas/[id]",bundlePath:"",filename:""},userland:r})},3209:(e,t,a)=>{let r;a.d(t,{$:()=>o});let n=require("mysql2/promise");var i=a.n(n);let o=async()=>(r||(r=i().createPool({host:"marcofriorefrigeracao.com.br",user:"marcofri_user",password:"SenhaNova123@",database:"marcofri_citymedical",waitForConnections:!0,connectionLimit:10,queueLimit:0})),r)},325:(e,t)=>{Object.defineProperty(t,"A",{enumerable:!0,get:function(){return a}});var a=function(e){return e.PAGES="PAGES",e.PAGES_API="PAGES_API",e.APP_PAGE="APP_PAGE",e.APP_ROUTE="APP_ROUTE",e.IMAGE="IMAGE",e}({})},9947:(e,t,a)=>{e.exports=a(5600)}};var t=require("../../../webpack-api-runtime.js");t.C(e);var a=t(t.s=4073);module.exports=a})();

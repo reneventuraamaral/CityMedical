@@ -1,14 +1,1 @@
-import { connectToDatabase } from '../../../lib/db';
-
-export default async function handler(req, res) {
-  const { id } = req.query;
-  const { nome, cpf, idpropag, telefone, logradouro, numero, complemento, bairro, cidade, uf, cep, id_usuario, dtnascimento, id_unidade } = req.body;
-  const db = await connectToDatabase();
-
-  if (req.method === 'PUT') {
-    await db.execute('UPDATE cadpaciente SET nome=?, cpf=?, idpropag=?, telefone=?, logradouro=?, numero=?, complemento=?, bairro=?, cidade=?, uf=?, cep=?, id_usuario=?, dtnascimento=?, id_unidade=? WHERE id=?', [nome, cpf, idpropag, telefone, logradouro, numero, complemento, bairro, cidade, uf, cep, id_usuario, dtnascimento, id_unidade, id]);
-    res.status(200).json({ message: 'Paciente atualizado!' });
-  } else {
-    res.status(405).json({ message: 'Método não permitido' });
-  }
-}
+"use strict";(()=>{var e={};e.id=5005,e.ids=[5005],e.modules={5600:e=>{e.exports=require("next/dist/compiled/next-server/pages-api.runtime.prod.js")},6762:(e,t)=>{Object.defineProperty(t,"M",{enumerable:!0,get:function(){return function e(t,a){return a in t?t[a]:"then"in t&&"function"==typeof t.then?t.then(t=>e(t,a)):"function"==typeof t&&"default"===a?t:void 0}}})},6682:(e,t,a)=>{a.r(t),a.d(t,{config:()=>s,default:()=>c,routeModule:()=>p});var i={};a.r(i),a.d(i,{default:()=>d});var n=a(9947),r=a(325),o=a(6762),u=a(3209);async function d(e,t){let{id:a}=e.query,{nome:i,cpf:n,idpropag:r,telefone:o,logradouro:d,numero:c,complemento:s,bairro:p,cidade:m,uf:P,cep:f,id_usuario:l,dtnascimento:A,id_unidade:E}=e.body,g=await (0,u.$)();"PUT"===e.method?(await g.execute("UPDATE cadpaciente SET nome=?, cpf=?, idpropag=?, telefone=?, logradouro=?, numero=?, complemento=?, bairro=?, cidade=?, uf=?, cep=?, id_usuario=?, dtnascimento=?, id_unidade=? WHERE id=?",[i,n,r,o,d,c,s,p,m,P,f,l,A,E,a]),t.status(200).json({message:"Paciente atualizado!"})):t.status(405).json({message:"M\xe9todo n\xe3o permitido"})}let c=(0,o.M)(i,"default"),s=(0,o.M)(i,"config"),p=new n.PagesAPIRouteModule({definition:{kind:r.A.PAGES_API,page:"/api/updatepaciente/[id]",pathname:"/api/updatepaciente/[id]",bundlePath:"",filename:""},userland:i})},3209:(e,t,a)=>{let i;a.d(t,{$:()=>o});let n=require("mysql2/promise");var r=a.n(n);let o=async()=>(i||(i=r().createPool({host:"marcofriorefrigeracao.com.br",user:"marcofri_user",password:"SenhaNova123@",database:"marcofri_citymedical",waitForConnections:!0,connectionLimit:10,queueLimit:0})),i)},325:(e,t)=>{Object.defineProperty(t,"A",{enumerable:!0,get:function(){return a}});var a=function(e){return e.PAGES="PAGES",e.PAGES_API="PAGES_API",e.APP_PAGE="APP_PAGE",e.APP_ROUTE="APP_ROUTE",e.IMAGE="IMAGE",e}({})},9947:(e,t,a)=>{e.exports=a(5600)}};var t=require("../../../webpack-api-runtime.js");t.C(e);var a=t(t.s=6682);module.exports=a})();

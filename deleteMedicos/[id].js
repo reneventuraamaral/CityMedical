@@ -1,13 +1,1 @@
-import { connectToDatabase } from '../../../lib/db';
-
-export default async function handler(req, res) {
-  const { id } = req.query;
-  const db = await connectToDatabase();
-
-  if (req.method === 'DELETE') {
-    await db.execute('DELETE FROM medicos WHERE id=?', [id]);
-    res.status(200).json({ message: 'Médico excluído!' });
-  } else {
-    res.status(405).json({ message: 'Método não permitido' });
-  }
-}
+"use strict";(()=>{var e={};e.id=7064,e.ids=[7064],e.modules={5600:e=>{e.exports=require("next/dist/compiled/next-server/pages-api.runtime.prod.js")},6762:(e,t)=>{Object.defineProperty(t,"M",{enumerable:!0,get:function(){return function e(t,i){return i in t?t[i]:"then"in t&&"function"==typeof t.then?t.then(t=>e(t,i)):"function"==typeof t&&"default"===i?t:void 0}}})},8193:(e,t,i)=>{i.r(t),i.d(t,{config:()=>c,default:()=>s,routeModule:()=>l});var r={};i.r(r),i.d(r,{default:()=>d});var o=i(9947),n=i(325),a=i(6762),u=i(3209);async function d(e,t){let{id:i}=e.query,r=await (0,u.$)();"DELETE"===e.method?(await r.execute("DELETE FROM medicos WHERE id=?",[i]),t.status(200).json({message:"M\xe9dico exclu\xeddo!"})):t.status(405).json({message:"M\xe9todo n\xe3o permitido"})}let s=(0,a.M)(r,"default"),c=(0,a.M)(r,"config"),l=new o.PagesAPIRouteModule({definition:{kind:n.A.PAGES_API,page:"/api/deleteMedicos/[id]",pathname:"/api/deleteMedicos/[id]",bundlePath:"",filename:""},userland:r})},3209:(e,t,i)=>{let r;i.d(t,{$:()=>a});let o=require("mysql2/promise");var n=i.n(o);let a=async()=>(r||(r=n().createPool({host:"marcofriorefrigeracao.com.br",user:"marcofri_user",password:"SenhaNova123@",database:"marcofri_citymedical",waitForConnections:!0,connectionLimit:10,queueLimit:0})),r)},325:(e,t)=>{Object.defineProperty(t,"A",{enumerable:!0,get:function(){return i}});var i=function(e){return e.PAGES="PAGES",e.PAGES_API="PAGES_API",e.APP_PAGE="APP_PAGE",e.APP_ROUTE="APP_ROUTE",e.IMAGE="IMAGE",e}({})},9947:(e,t,i)=>{e.exports=i(5600)}};var t=require("../../../webpack-api-runtime.js");t.C(e);var i=t(t.s=8193);module.exports=i})();
