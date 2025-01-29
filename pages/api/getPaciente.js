@@ -5,20 +5,20 @@ export default async function handler(req, res) {
 
         try {
             const db = await mysql.createConnection({
-                host: 'localhost',
-                user: 'root',
-                password: '',
-                database: 'citymedical',
+                host: 'marcofriorefrigeracao.com.br', // Host do banco de dados
+                user: 'marcofri_user',      // Usuário do banco de dados
+                password: 'SenhaNova123@', // Senha do banco de dados
+                database: 'marcofri_citymedical', // Nome do banco de dados
             });
 
             let query;
             let params;
 
             if (id) {
-                query = 'SELECT c.nome nome_paciente,c.id id_paciente,tt.nome nome_tratamento,t.id id_tratamento,t.id_medico , m.nome nome_medico FROM cadpaciente c JOIN tratamentos t ON (t.id_paciente = c.id) JOIN tipotrat tt ON (t.id_tptrat = tt.id) JOIN medicos m ON (t.id_medico = m.id) WHERE c.id = ?';
+                query = 'SELECT c.nome nome_paciente,c.id id_paciente,t.nome nome_tratamento, t.id id_tratamento,tt.id_medico , m.nome nome_medico FROM cadpaciente c JOIN itens_tratamento tt ON (tt.id_tptrat = c.id) JOIN tratamentos t ON (tt.id_tptrat = t.id) JOIN medicos m ON (tt.id_medico = m.id) WHERE c.id = ?';
                 params = [id];
             } else if (nome) {
-                query = 'SELECT c.nome nome_paciente,c.id id_paciente,tt.nome nome_tratamento,t.id id_tratamento,t.id_medico , m.nome nome_medico FROM cadpaciente c JOIN tratamentos t ON (t.id_paciente = c.id) JOIN tipotrat tt ON (t.id_tptrat = tt.id) JOIN medicos m ON (t.id_medico = m.id) WHERE c.nome LIKE ?';
+                query = 'SELECT c.nome nome_paciente,c.id id_paciente,t.nome nome_tratamento, t.id id_tratamento,tt.id_medico , m.nome nome_medico FROM cadpaciente c JOIN itens_tratamento tt ON (tt.id_tptrat = c.id) JOIN tratamentos t ON (tt.id_tptrat = t.id) JOIN medicos m ON (tt.id_medico = m.id) WHERE c.nome LIKE ?';
                 params = [`%${nome}%`];
             }
 

@@ -1,10 +1,10 @@
 import mysql from 'mysql2/promise';
 
 const dbConfig = {
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'citymedical',
+  host: 'marcofriorefrigeracao.com.br', // Host do banco de dados
+  user: 'marcofri_user',      // Usuário do banco de dados
+  password: 'SenhaNova123@', // Senha do banco de dados
+  database: 'marcofri_citymedical', // Nome do banco de dados
 };
 
 export default async function handler(req, res) {

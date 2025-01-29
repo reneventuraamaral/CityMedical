@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { useUser } from '../context/UserContext'; // Importa o contexto
 import Layout from '../components/Layout';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 export default function Login() {
   const [usuario, setLogin] = useState('');
   const [senha, setSenha] = useState('');
-  const [error, setError] = useState('');
+  //const [error, setError] = useState('');
   const { setUser } = useUser();
   const router = useRouter();
 
@@ -53,7 +54,8 @@ export default function Login() {
       <div className="login-container">
       {/* Imagem ao lado */}
       <div className="image-container">
-        <img src="/images/city.jpg" alt="Imagem de Login" />
+        <Image src="/images/city.jpg" alt="Imagem de Login" width={500} height={300} />
+       
       </div>
       
         <form method="POST" class="formLogin">
@@ -70,7 +72,7 @@ export default function Login() {
             <div class="lembrar-me">
                <input type="checkbox" /> <p>Lembrar-me</p>
             </div>
-            <a href="/">Esqueci minha senha</a>
+            <link href="/" />Esqueci minha senha
             
             <button className="buttonLogin" 
                type="button" 

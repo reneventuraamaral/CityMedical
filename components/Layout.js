@@ -1,6 +1,7 @@
 import React from 'react';
 import '../styles/global.css';
-import { useUser } from '../context/UserContext'; // Importa o contexto
+//import { useUser } from '../context/UserContext'; // Importa o contexto
+import Image from 'next/image';
 //const { user } = useUser();
   
 export default function Layout({ children }) {
@@ -11,10 +12,11 @@ export default function Layout({ children }) {
     
       {/* Logo */}
       <div style={styles.header}>
-        <img src="/images/city.jpg" alt="Logo" style={styles.logo} />
+        <Image src="/images/city.jpg" alt="Logo" width={50} height={30} />
+       
         <h4 style={styles.title}>City Medical Group</h4>
         
-               
+             
       
       </div>
       <div class="barra-horizontal-azul" style={{alignItems: 'center'}}></div>

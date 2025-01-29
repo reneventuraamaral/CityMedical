@@ -33,15 +33,15 @@ export default function CadastroMedicamentos() {
         try {
             setError('');
             setSuccessMessage('');
-            const dtPedido = new Date().toISOString().split('T')[0]; // Data no formato YYYY-MM-DD
+            //const dtPedido = new Date().toISOString().split('T')[0]; // Data no formato YYYY-MM-DD
 
-            const response = await axios.post('/api/medicamentos', {
+          /*  const response = await axios.post('/api/medicamentos', {
                 id_paciente: paciente.id_paciente, // Pego do resultado da pesquisa
                 id_medico: paciente.id_medico,     // Pego do resultado da pesquisa
                 id_tratamento: paciente.id_tratamento, // Pego do resultado da pesquisa
                 dt_pedido: dtPedido,               // Data atual
                 descricao,                         // Campo preenchido pelo usuário
-            });
+            });*/
 
             setSuccessMessage('Medicamento cadastrado com sucesso!');
             setDescricao(''); // Limpa o campo de descrição

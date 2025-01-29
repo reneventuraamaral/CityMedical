@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useForm } from "react-hook-form";
-import MaskedInput from "react-text-mask";
+//import MaskedInput from "react-text-mask";
 import Layout from '../components/Layout';
+import InputMask from "react-input-mask";
 
 export default function CadPaciente() {
-  const [tipotratOptions, setTipotratOptions] = useState([]);
-  const [selectedTrat, setSelectedTrat] = useState('');
-  const [idUsuario, setIdUsuario] = useState(null);
+ // const [tipotratOptions, setTipotratOptions] = useState([]);
+ // const [selectedTrat, setSelectedTrat] = useState('');
+ // const [idUsuario, setIdUsuario] = useState(null);
   const [pacientes, setPacientes] = useState([]);
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
@@ -20,7 +20,7 @@ export default function CadPaciente() {
   const [cidade, setCidade] = useState('');
   const [uf, setUf] = useState('');
   const [cep, setCep] = useState('');
-  const [id_usuario, setId_Usuario] = useState('');
+  //const [id_usuario, setId_Usuario] = useState('');
   const [dtnascimento, setDtnascimento] = useState('');
   const [id_unidade, setId_unidade] = useState('');
   const [editId, setEditId] = useState(null);
@@ -58,20 +58,20 @@ export default function CadPaciente() {
     };
 
     fetchPropagandas();
-  }, []);
+  }, [router]);
 
   // Carregar dados do usuário e lista de pacientes
   useEffect(() => {
     const id = localStorage.getItem('id_usuario');
     if (id) {
-      setId_Usuario(id);
+      //setId_Usuario(id);
       fetchPacientes();
       fetchTipotratOptions(); // Carregar opções da tabela `tipotrat`
     } else {
       alert('Usuário não autenticado! Faça o login.');
       router.push('/login');
     }
-  }, []);
+  }, [router]);
 
    // Função para buscar dados da tabela `tipotrat`
    const fetchTipotratOptions = async () => {
@@ -121,7 +121,7 @@ export default function CadPaciente() {
       setCidade('');
       setUf('');
       setCep('');
-      setId_Usuario('');
+      //setId_Usuario('');
       setDtnascimento('');
       setId_unidade('');
       setEditId(null);
@@ -196,8 +196,8 @@ export default function CadPaciente() {
             />
         </div>
         <div style={{ flex: 1 }}>
-             <input
-              type="text"
+             <InputMask
+              mask="999.999.999-99"
               placeholder="Cpf"
               value={cpf}
               onChange={(e) => setCpf(e.target.value)}
@@ -225,9 +225,9 @@ export default function CadPaciente() {
       </select>
         </div>
         <label>Telefone:</label>
-        <MaskedInput
-        mask={[/[0-9]/, /[0-9]/,"(", /[0-9]/, /[0-9]/, ") ", /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, "-", /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/]}
-        placeholder="00(00) 00000-0000"
+        <InputMask
+            mask="(99) 99999-9999"
+            placeholder='(99) 99999-9999'
         value={telefone}
         onChange={(e) => setTelefone(e.target.value)}
         required
@@ -281,8 +281,8 @@ export default function CadPaciente() {
          ))}
        </select>
        <label>Cep:</label>
-       <MaskedInput
-        mask={[ /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, "-", /[0-9]/, /[0-9]/, /[0-9]/]}
+        <InputMask
+        mask="(99) 99999-9999"
         placeholder="00000-000"
         value={cep}
         onChange={(e) => setCep(e.target.value)}
@@ -291,13 +291,13 @@ export default function CadPaciente() {
      
      </div>
  
-        <input
+      {/*  <input
           type="text"
           placeholder="Id_usuario"
           value={id_usuario}
           onChange={(e) => setId_Usuario(e.target.value)}
           
-        />
+        />*/}
         <input
           type="date"
           placeholder="Data de Nascimento"

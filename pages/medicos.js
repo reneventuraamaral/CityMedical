@@ -1,131 +1,113 @@
 import { useEffect, useState } from 'react';
-import { useUser } from '../context/UserContext';
-//import React, { useState } from 'react';
-import axios from 'axios';
 import { useRouter } from 'next/router';
+import { useUser } from '../context/UserContext';
 import Layout from '../components/Layout';
 
 export default function Medicos() {
   const { user } = useUser();
+  const router = useRouter();
+
+  // Estados para médicos e formulário
   const [medicos, setMedicos] = useState([]);
   const [error, setError] = useState('');
-  // Declarar os campos de edição
   const [nome, setNome] = useState('');
   const [especialidade, setEspecialidade] = useState('');
   const [telefone, setTelefone] = useState('');
   const [dtcad, setDtCad] = useState('');
   const [crm, setCrm] = useState('');
   const [uf_crm, setUfCRM] = useState('');
-  const router = useRouter();
   const [editId, setEditId] = useState(null);
-  //const [id_usuario, setId_Usuario] = useState('');
 
- 
   const estados = [
     'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO',
     'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI',
-    'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+    'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO',
   ];
 
-  if (!user) {
-    return <p>Você precisa estar logado para acessar esta página.</p>;
-  }
-
-  const linhausuario = user ? `Usuário: ${user.nome}` : 'Não logado';
-  const id_usuario = user.id;
-  
-    // Função para formatar datas
-    const formatDate = (dateString) => {
-      if (!dateString) return 'Sem data';
-      const date = new Date(dateString);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}/${month}/${year}`;
-    };
-  
-    // Função para formatar a data no formato YYYY-MM-DD para campos de input tipo date
-    const formatDateForInput = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
+  // Proteção de acesso à página
+  useEffect(() => {
+    if (!user) {
+      router.push('/login'); // Redireciona para o login se não autenticado
+    }
+  }, [user, router]);
 
   // Função para buscar médicos
   const fetchMedicos = async () => {
     try {
-      const response = await fetch('/api/getMedicos');
-      if (!response.ok) {
-        throw new Error('Erro ao buscar dados dos médicos.');
-      }
-      const data = await response.json();
-      setMedicos(data);
-    } catch (error) {
-      console.error('Erro ao buscar médicos:', error);
-      setError('Não foi possível carregar a lista de médicos.');
+      const res = await fetch('/api/getMedicos');
+      if (!res.ok) throw new Error('Erro ao buscar médicos');
+      const data = await res.json();
+      setMedicos(data || []);
+    } catch (err) {
+      console.error(err);
+      setError('Não foi possível carregar os médicos.');
     }
   };
 
- 
+  // Buscar médicos ao carregar a página
+  useEffect(() => {
+    fetchMedicos();
+  }, []);
 
-  // Submeter (Cadastrar ou Alterar)
+  // Submeter formulário (Cadastrar ou Atualizar)
   const handleSubmit = async (e) => {
     e.preventDefault();
     const endpoint = editId ? `/api/updateMedicos/${editId}` : '/api/medicos';
     const method = editId ? 'PUT' : 'POST';
 
-    const res = await fetch(endpoint, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome, especialidade, telefone,dtcad, id_usuario, crm,uf_crm}),
-    });
+    try {
+      const res = await fetch(endpoint, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, especialidade, telefone, dtcad, crm, uf_crm, id_usuario: user.id }),
+      });
 
-    if (res.ok) {
-      alert(editId ? 'Médico atualizado!' : 'Médico cadastrado!');
-      setNome('');
-      setEspecialidade('');
-      setTelefone('');
-      setDtCad('');
-      //setId_Usuario('');
-      setCrm('');
-      setUfCRM('');
-      setEditId(null);
-      fetchMedicos();
-    
+      if (res.ok) {
+        alert(editId ? 'Médico atualizado!' : 'Médico cadastrado!');
+        resetForm();
+        fetchMedicos();
+      } else {
+        throw new Error('Erro ao salvar os dados.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Não foi possível salvar os dados.');
     }
   };
 
-   // Editar Paciente
-   const handleEdit = (id) => {
-    const medico = medicos.find((medico) => medico.id === id); // Encontra o médico na lista
+  // Editar médico
+  const handleEdit = (id) => {
+    const medico = medicos.find((m) => m.id === id);
     if (medico) {
-      setEditId(medico.id); // Define o ID para edição
+      setEditId(medico.id);
       setNome(medico.nome || '');
       setEspecialidade(medico.especialidade || '');
       setTelefone(medico.telefone || '');
-      setDtCad(formatDateForInput(medico.dtcad) || ''); // Formata a data para o input de tipo date
+      setDtCad(formatDateForInput(medico.dtcad) || '');
       setCrm(medico.crm || '');
       setUfCRM(medico.uf_crm || '');
-    } else {
-      console.error(`Médico com ID ${id} não encontrado.`);
     }
   };
-  
 
-  // Excluir Paciente
+  // Excluir médico
   const handleDelete = async (id) => {
-    if (confirm('Deseja realmente excluir o Médico?')) {
-      const res = await fetch(`/api/deleteMedicos/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        alert('Médico excluído!');
-        fetchMedicos();
+    if (confirm('Deseja realmente excluir o médico?')) {
+      try {
+        const res = await fetch(`/api/deleteMedicos/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          alert('Médico excluído!');
+          fetchMedicos();
+        } else {
+          throw new Error('Erro ao excluir o médico.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Não foi possível excluir o médico.');
       }
     }
   };
 
+  // Resetar formulário
   const resetForm = () => {
     setEditId(null);
     setNome('');
@@ -135,20 +117,28 @@ export default function Medicos() {
     setCrm('');
     setUfCRM('');
   };
-  
 
-  useEffect(() => {
-    fetchMedicos();
-  }, []);
+  // Formatar data para o campo de input tipo date
+  const formatDateForInput = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // Proteção de carregamento
+  if (!user) {
+    return null;
+  }
 
   return (
-    <div>
-      <Layout>
+    <Layout>
       <h1>Cadastro de Médicos</h1>
-      {user ? <p>Usuário logado: {user.nome}</p> : <p>Não logado.</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      <form onSubmit={handleSubmit}>
+     <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '10px' }}>
                        
           </div>
@@ -162,29 +152,23 @@ export default function Medicos() {
               required
               
             />
-            
-            <input
-              type="text"
-              placeholder="Especialidade"
-              value={especialidade}
-              onChange={(e) => setEspecialidade(e.target.value)}
-              required
-            />
-  
-        </div>
-
-
-
-
-
+        <input
+          type="text"
+          placeholder="Especialidade"
+          value={especialidade}
+          onChange={(e) => setEspecialidade(e.target.value)}
+          required
+		  />
+		
+		</div>
         <div className="input-container">
             <input type="text" placeholder="Telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} required />
             <input type="date" placeholder="Data de Cadastro" value={dtcad} onChange={(e) => setDtCad(e.target.value)} />
         </div>
-        <div className="input-container">
+		<div className="input-container">
             <input type="text" placeholder="CRM" value={crm} onChange={(e) => setCrm(e.target.value)} />
-           
-         <div className="select-container">
+     
+        <div className="select-container">
         <select
           value={uf_crm}
           onChange={(e) => setUfCRM(e.target.value)}
@@ -197,13 +181,14 @@ export default function Medicos() {
             </option>
          ))}
        </select>
-       </div>  
+	   {/*  <button type="submit">{editId ? 'Atualizar' : 'Cadastrar'}</button>      */}
+		</div>  
         
         
         
       
         </div>  
-         
+       
        
          
         {/*<input placeholder="ID do Usuario" onChange={(e) => setIdUsuario(e.target.value)} />*/}
@@ -215,7 +200,7 @@ export default function Medicos() {
                     className="button button-submit"
                     onClick={() => console.log('Botão Enviar clicado')}
                   >
-                    Cadastrar
+                   {editId ? 'Atualizar' : 'Cadastrar'}
                   </button>
 
                       {/* Botão Cancelar */}
@@ -250,13 +235,10 @@ export default function Medicos() {
                       </div>   
                 
          
-       </form>
+      </form>
 
-
-
-      {/* Tabela de médicos */}
       {medicos.length > 0 ? (
-        <table border="1" style={{ width: '100%', marginTop: '20px'}}>
+         <table border="1" style={{ width: '100%', marginTop: '20px'}}>
           <thead>
             <tr>
               <th>ID</th>
@@ -278,8 +260,7 @@ export default function Medicos() {
                 <td>{medico.crm}</td>
                 <td>{medico.uf_crm}</td>
                 <td>
-                  <button onClick={() => handleEdit(medico.id)}
-                      style={{
+                  <button onClick={() => handleEdit(medico.id)}style={{
                         marginRight: '5px',
                         padding: '5px',
                         border: 'none',
@@ -288,8 +269,7 @@ export default function Medicos() {
                         borderRadius: '3px',
                         cursor: 'pointer',
                       }}>Editar</button>
-                  <button onClick={() => handleDelete(medico.id)}
-                      style={{
+                  <button onClick={() => handleDelete(medico.id)}style={{
                         padding: '5px',
                         border: 'none',
                         backgroundColor: '#dc3545',
@@ -305,7 +285,7 @@ export default function Medicos() {
       ) : (
         <p>Nenhum médico cadastrado.</p>
       )}
-      </Layout>
-    </div>
+    </Layout>
+  
   );
 }

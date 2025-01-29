@@ -1,8 +1,4 @@
 import { connectToDatabase } from '../../lib/db';
-//import { useRouter } from 'next/router';
-
-//const router = useRouter();
-
 export default async function handler(req, res) {
   const db = await connectToDatabase();
 

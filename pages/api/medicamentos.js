@@ -1,10 +1,10 @@
 import mysql from 'mysql2/promise';
 
 const dbConfig = {
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'citymedical',
+  host: 'marcofriorefrigeracao.com.br', // Host do banco de dados
+  user: 'marcofri_user',      // Usuário do banco de dados
+  password: 'SenhaNova123@', // Senha do banco de dados
+  database: 'marcofri_citymedical', // Nome do banco de dados
 };
 
 const connectToDatabase = async () => {
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
                 FROM medicamentos m
                     JOIN cadpaciente p ON m.id_paciente = p.id
                     JOIN medicos d ON m.id_medico = d.id
-                    JOIN tipotrat t ON m.id_tratamento = t.id
+                    JOIN tratamentos t ON m.id_tratamento = t.id
                     JOIN contratos co ON m.id_paciente = co.id_paciente
           WHERE p.id = ?
         `;
@@ -70,7 +70,7 @@ export default async function handler(req, res) {
                 FROM medicamentos m
                     JOIN cadpaciente p ON m.id_paciente = p.id
                     JOIN medicos d ON m.id_medico = d.id
-                    JOIN tipotrat t ON m.id_tratamento = t.id
+                    JOIN tratamentos t ON m.id_tratamento = t.id
                     JOIN contratos co ON m.id_paciente = co.id_paciente
           WHERE p.nome LIKE ?
         `;

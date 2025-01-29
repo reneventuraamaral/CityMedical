@@ -6,10 +6,10 @@ export default async function handler(req, res) {
     try {
       // Configuração de conexão com o banco de dados
       const connection = await mysql.createConnection({
-        host: 'localhost',        // Host do banco de dados
-        user: 'root',      // Usuário do banco
-        password: '',    // Senha do banco
-        database: 'citymedical' // Nome do banco de dados
+        host: 'marcofriorefrigeracao.com.br', // Host do banco de dados
+        user: 'marcofri_user',      // Usuário do banco de dados
+        password: 'SenhaNova123@', // Senha do banco de dados
+        database: 'marcofri_citymedical', // Nome do banco de dados
       });
 
       // Consulta SQL para buscar os dados da tabela tipotrat

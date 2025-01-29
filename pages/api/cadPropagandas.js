@@ -1,5 +1,4 @@
 import { connectToDatabase } from '../../lib/db';
-import { useUser } from '../../context/UserContext'; // Importa o contexto
 
 
 export default async function handler(req, res) {

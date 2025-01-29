@@ -4,7 +4,8 @@ import { useState } from 'react';
 import Layout from '../../components/Layout';
 
 export default function CadastroMedicamentos() {
-    const [paciente, setPaciente] = useState(null);
+    //const [paciente, setPaciente] = useState(null);
+    const paciente = useState(null);
     const [id, setId] = useState('');
     const [desc, setDesc] = useState('');
     
@@ -46,12 +47,12 @@ export default function CadastroMedicamentos() {
         }
 
         try {
-            const response = await axios.post('/api/addMedicamento', {
+           /*  const response = await axios.post('/api/addMedicamento', {
                 id_paciente: paciente.id,
                 id_medico: paciente.id_medico,
                 id_tratamento: paciente.id_tratamento,
                 desc,
-            });
+            }); */
             alert('Medicamento cadastrado com sucesso!');
         } catch (error) {
             console.error('Erro ao cadastrar medicamento:', error);
