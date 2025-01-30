@@ -1,17 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-//import MaskedInput from "react-text-mask";
 import Layout from '../components/Layout';
-import InputMask from "react-input-mask";
+
 
 export default function CadPaciente() {
- // const [tipotratOptions, setTipotratOptions] = useState([]);
- // const [selectedTrat, setSelectedTrat] = useState('');
- // const [idUsuario, setIdUsuario] = useState(null);
+
   const [pacientes, setPacientes] = useState([]);
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
-  //const [idpropag, setIdpropag] = useState('');
   const [telefone, setTelefone] = useState('');
   const [logradouro, setLogradouro] = useState('');
   const [numero, setNumero] = useState('');
@@ -20,7 +16,6 @@ export default function CadPaciente() {
   const [cidade, setCidade] = useState('');
   const [uf, setUf] = useState('');
   const [cep, setCep] = useState('');
-  //const [id_usuario, setId_Usuario] = useState('');
   const [dtnascimento, setDtnascimento] = useState('');
   const [id_unidade, setId_unidade] = useState('');
   const [editId, setEditId] = useState(null);
@@ -196,9 +191,9 @@ export default function CadPaciente() {
             />
         </div>
         <div style={{ flex: 1 }}>
-             <InputMask
-              mask="999.999.999-99"
-              placeholder="Cpf"
+             <input
+              type="text"
+              placeholder="9999.999.99-99"
               value={cpf}
               onChange={(e) => setCpf(e.target.value)}
               required
@@ -225,8 +220,8 @@ export default function CadPaciente() {
       </select>
         </div>
         <label>Telefone:</label>
-        <InputMask
-            mask="(99) 99999-9999"
+        <input
+            type="text"
             placeholder='(99) 99999-9999'
         value={telefone}
         onChange={(e) => setTelefone(e.target.value)}
@@ -281,8 +276,8 @@ export default function CadPaciente() {
          ))}
        </select>
        <label>Cep:</label>
-        <InputMask
-        mask="(99) 99999-9999"
+        <input
+        type="text"
         placeholder="00000-000"
         value={cep}
         onChange={(e) => setCep(e.target.value)}
@@ -291,13 +286,6 @@ export default function CadPaciente() {
      
      </div>
  
-      {/*  <input
-          type="text"
-          placeholder="Id_usuario"
-          value={id_usuario}
-          onChange={(e) => setId_Usuario(e.target.value)}
-          
-        />*/}
         <input
           type="date"
           placeholder="Data de Nascimento"
