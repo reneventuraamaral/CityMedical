@@ -45,21 +45,7 @@ export default function Medicos() {
   };
 
     // Função para buscar paciente
-    const searchPatients = async () => {
-      
-        try {
-            const response = await axios.get(`/api/getPaciente?id=${id}`);
-            setPatients(response.data); 
-            console.log('ID do paciente:', id);
-            console.log('URL chamada:', `/api/getPaciente?id=${id}`);
-    
-        } catch (error) {
-            console.error('Erro ao buscar paciente:', error);
-            alert('Paciente não encontrado.');
-        }
-        //setPatients(response.data);
-      };
-
+   
   // Buscar médicos ao carregar a página
   useEffect(() => {
     fetchMedicos();
