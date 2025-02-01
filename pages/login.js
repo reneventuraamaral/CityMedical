@@ -7,7 +7,7 @@ import Image from 'next/image';
 export default function Login() {
   const [usuario, setLogin] = useState('');
   const [senha, setSenha] = useState('');
-  //const [error, setError] = useState('');
+  const [setError] = useState('');
   const { setUser } = useUser();
   const router = useRouter();
 
@@ -26,6 +26,8 @@ export default function Login() {
         setError(errorData.message || 'Erro ao autenticar');
         return;
       }
+
+
   
       const responseData = await response.json(); // Apenas UMA chamada ao .json()
       console.log('Resposta da API:', responseData);
@@ -34,6 +36,7 @@ export default function Login() {
   
       if (responseData.user) {
         setUser(responseData.user); // Define o usuário no contexto global
+        localStorage.setItem('user', JSON.stringify(responseData.user));
         console.log('Usuário logado:', responseData.user);
         //alert(user.message);
         router.push('/menu'); // Redireciona ao menu

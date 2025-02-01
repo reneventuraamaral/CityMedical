@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       });
 
       // Consulta SQL para buscar os dados da tabela tipotrat
-      const [rows] = await connection.execute('SELECT id, nome, duracao FROM tipotrat');
+      const [rows] = await connection.execute('SELECT id, nome, duracao FROM tratamentos');
 
       // Retorna os dados em formato JSON
       res.status(200).json(rows);

@@ -1,313 +1,566 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useUser } from '../context/UserContext';
 import Layout from '../components/Layout';
+import { useUser } from '../context/UserContext';
+import jsPDF from 'jspdf';
 
-export default function Medicos() {
-  const { user } = useUser();
+export default function Consultas() {
+  const [obs, setObs] = useState('');
+  const [dtconsulta, setDtconsulta] = useState('');
+  const [activeTab, setActiveTab] = useState('consulta'); 
+  const [pacientes, setPacientes] = useState([]);
+  const [selectedPaciente, setSelectedPaciente] = useState('');
+  const { user } = useUser(); 
   const router = useRouter();
+  const [searchValue, setSearchValue] = useState('');
 
-  // Estados para médicos e formulário
-  const [medicos, setMedicos] = useState([]);
-  const [error, setError] = useState('');
-  const [nome, setNome] = useState('');
-  const [especialidade, setEspecialidade] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [dtcad, setDtCad] = useState('');
-  const [crm, setCrm] = useState('');
-  const [uf_crm, setUfCRM] = useState('');
-  const [editId, setEditId] = useState(null);
+  const [gerarReceita, setGerarReceita] = useState(false);
+  const [gerarExame, setGerarExame] = useState(false);
+  const [receitaTexto, setReceitaTexto] = useState('');
+  const [exameTexto, setExameTexto] = useState('');
+  const [medicamento, setMedicamento] = useState('');
+  const [obs_medicamento, setObsMedicamento] = useState('');
 
-  const estados = [
-    'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO',
-    'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI',
-    'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO',
-  ];
+  const [dadosPaciente, setDadosPaciente] = useState(null);
+  const [prescricoes, setPrescricoes] = useState([]);
+  const [receitas, setReceitas] = useState([]);
+  const [exames, setExames] = useState([]);
+  const [medicamentos, setMedicamentos] = useState([]);
 
-  // Proteção de acesso à página
   useEffect(() => {
     if (!user) {
-      router.push('/login'); // Redireciona para o login se não autenticado
+      alert('Você precisa estar logado para acessar esta página.');
+      router.push('/login');
     }
+
+    const fetchPacientes = async () => {
+      try {
+        const res = await fetch('/api/getPacientesCombo');
+        const data = await res.json();
+        setPacientes(data || []);
+      } catch (error) {
+        console.error('Erro ao buscar pacientes:', error);
+        setPacientes([]);
+      }
+    };
+
+    fetchPacientes();
   }, [user, router]);
 
-  // Função para buscar médicos
-  const fetchMedicos = async () => {
+  const fetchDadosGeralConsulta = async (tipo, valor) => {
+    if (!valor) {
+      alert('Digite um ID ou Nome para buscar.');
+      return;
+    }
+
     try {
-      const res = await fetch('/api/getMedicos');
-      if (!res.ok) throw new Error('Erro ao buscar médicos');
+      const res = await fetch(`/api/getPacienteDados?${tipo}=${valor}`);
       const data = await res.json();
-      setMedicos(data || []);
-    } catch (err) {
-      console.error(err);
-      setError('Não foi possível carregar os médicos.');
+      setDadosPaciente(data.dadosPaciente[0] || null);
+      setPrescricoes(data.prescricoes || []);
+      setReceitas(data.receitas || []);
+      setExames(data.exames || []);
+      setMedicamentos(data.medicamentos || []);
+    } catch (error) {
+      console.error('Erro ao buscar dados do paciente:', error);
+      alert('Erro ao buscar os dados. Tente novamente.');
     }
   };
 
-    // Função para buscar paciente
-   
-  // Buscar médicos ao carregar a página
-  useEffect(() => {
-    fetchMedicos();
-  }, []);
-
-  // Submeter formulário (Cadastrar ou Atualizar)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const endpoint = editId ? `/api/updateMedicos/${editId}` : '/api/medicos';
-    const method = editId ? 'PUT' : 'POST';
+    
+    if (user.tipousuario !== 'M') {
+      alert('Apenas médicos podem gravar consultas.');
+      return;
+    }
 
     try {
-      const res = await fetch(endpoint, {
-        method,
+      const response = await fetch('/api/cadConsultas', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome, especialidade, telefone, dtcad, crm, uf_crm, id_usuario: user.id }),
+        body: JSON.stringify({
+          id_paciente: selectedPaciente,
+          id_medico: user.tipousuario === 'M' ? user.id : null,
+          id_usuario: user.id,
+          obs,
+          dtconsulta,
+          gerarReceita,
+          receitaTexto,
+          gerarExame,
+          exameTexto,
+          medicamento,
+          obs_medicamento,
+        }),
       });
 
-      if (res.ok) {
-        alert(editId ? 'Médico atualizado!' : 'Médico cadastrado!');
-        resetForm();
-        fetchMedicos();
+      if (response.ok) {
+        alert('Consulta salva com sucesso!');
+        setSelectedPaciente('');
+        setObs('');
+        setDtconsulta('');
+        setGerarReceita(false);
+        setReceitaTexto('');
+        setGerarExame(false);
+        setExameTexto('');
+        setMedicamento('');
+        setObsMedicamento('');
       } else {
-        throw new Error('Erro ao salvar os dados.');
+        throw new Error('Erro ao salvar a consulta.');
       }
-    } catch (err) {
-      console.error(err);
-      alert('Não foi possível salvar os dados.');
+    } catch (error) {
+      console.error('Erro ao salvar a consulta:', error);
     }
   };
 
-  // Editar médico
-  const handleEdit = (id) => {
-    const medico = medicos.find((m) => m.id === id);
-    if (medico) {
-      setEditId(medico.id);
-      setNome(medico.nome || '');
-      setEspecialidade(medico.especialidade || '');
-      setTelefone(medico.telefone || '');
-      setDtCad(formatDateForInput(medico.dtcad) || '');
-      setCrm(medico.crm || '');
-      setUfCRM(medico.uf_crm || '');
-    }
+  const gerarPDF = (titulo, conteudo) => {
+    const doc = new jsPDF();
+    doc.setFont('helvetica');
+    doc.setFontSize(14);
+    doc.text(titulo, 10, 10);
+    doc.setFontSize(12);
+    doc.text(conteudo, 10, 20, { maxWidth: 180 });
+    doc.save(`${titulo}.pdf`);
   };
 
-  // Excluir médico
-  const handleDelete = async (id) => {
-    if (confirm('Deseja realmente excluir o médico?')) {
-      try {
-        const res = await fetch(`/api/deleteMedicos/${id}`, { method: 'DELETE' });
-        if (res.ok) {
-          alert('Médico excluído!');
-          fetchMedicos();
-        } else {
-          throw new Error('Erro ao excluir o médico.');
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Não foi possível excluir o médico.');
-      }
-    }
+  const estilos = {
+    th: {
+      padding: '10px',
+      border: '1px solid #ddd',
+      textAlign: 'left',
+    },
+    td: {
+      padding: '10px',
+      border: '1px solid #ddd',
+      textAlign: 'left',
+    },
+    linhaPar: {
+      backgroundColor: '#f2f2f2',
+    },
+    linhaImpar: {
+      backgroundColor: '#fff',
+    },
   };
 
-  // Resetar formulário
-  const resetForm = () => {
-    setEditId(null);
-    setNome('');
-    setEspecialidade('');
-    setTelefone('');
-    setDtCad('');
-    setCrm('');
-    setUfCRM('');
-  };
+  // Função para formatar datas (YYYY-MM-DD para DD/MM/YYYY)
+const formatarData = (data) => {
+  if (!data) return "-";
+  return new Intl.DateTimeFormat('pt-BR').format(new Date(data));
+};
 
-  // Formatar data para o campo de input tipo date
-  const formatDateForInput = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-
-  // Proteção de carregamento
-  if (!user) {
-    return null;
-  }
+  
 
   return (
     <Layout>
-      <h1>Ficha Médica</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      
-            
+      <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px' }}>
+        <h1 style={{ textAlign: 'center', color: '#333' }}>Consultas</h1>
 
-            {/* Busca do paciente */}
-            <div style={{ marginBottom: '20px',  padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-                <label>Pesquisar por ID ou Nome do Paciente:</label>
-                <input
-                    type="text"
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    style={{ marginLeft: '10px', padding: '5px' }}
-                />
-                <button onClick={handleSearch} style={{ marginLeft: '10px', padding: '5px 10px' }}>
-                    Pesquisar
-                </button>
-            </div>
-
-            {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
-            {successMessage && <div style={{ color: 'green', marginBottom: '10px' }}>{successMessage}</div>}
-
-     <form onSubmit={handleSubmit}>
+        {/* Navegação entre as abas */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+          <button
+            onClick={() => setActiveTab('consulta')}
+            style={{
+              padding: '10px 20px',
+              border: 'none',
+              borderBottom: activeTab === 'consulta' ? '3px solid #007bff' : 'none',
+              backgroundColor: 'transparent',
+              cursor: 'pointer',
+            }}
+          >
+            Consulta
+          </button>
+          <button
+            onClick={() => setActiveTab('fichamedica')}
+            style={{
+              padding: '10px 20px',
+              border: 'none',
+              borderBottom: activeTab === 'fichamedica' ? '3px solid #007bff' : 'none',
+              backgroundColor: 'transparent',
+              cursor: 'pointer',
+            }}
+          >
+            Ficha Médica
+          </button>
         
-          <div style={{ marginBottom: '10px' }}>
-                       
-          </div>
-          <div className="input-container">
-            <input
-              
-              type="text"
-              placeholder="Nome do Médico"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              required
-              
-            />
-        <input
-          type="text"
-          placeholder="Especialidade"
-          value={especialidade}
-          onChange={(e) => setEspecialidade(e.target.value)}
-          required
-		  />
-		
-		</div>
-        <div className="input-container">
-            <input type="text" placeholder="Telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} required />
-            <input type="date" placeholder="Data de Cadastro" value={dtcad} onChange={(e) => setDtCad(e.target.value)} />
+        <button
+            onClick={() => setActiveTab('prescricoes')}
+            style={{
+              padding: '10px 20px',
+              border: 'none',
+              borderBottom: activeTab === 'prescricoes' ? '3px solid #007bff' : 'none',
+              backgroundColor: 'transparent',
+              cursor: 'pointer',
+            }}
+          >
+            Prescrições Anteriores
+          </button>
+
+          <button
+            onClick={() => setActiveTab('medicamentos')}
+            style={{
+              padding: '10px 20px',
+              border: 'none',
+              borderBottom: activeTab === 'medicamentos' ? '3px solid #007bff' : 'none',
+              backgroundColor: 'transparent',
+              cursor: 'pointer',
+            }}
+          >
+            Medicamentos
+          </button>
+
+          <button
+            onClick={() => setActiveTab('receitas')}
+            style={{
+              padding: '10px 20px',
+              border: 'none',
+              borderBottom: activeTab === 'receitas' ? '3px solid #007bff' : 'none',
+              backgroundColor: 'transparent',
+              cursor: 'pointer',
+            }}
+          >
+            Receitas
+          </button>
+
+          <button
+            onClick={() => setActiveTab('exames')}
+            style={{
+              padding: '10px 20px',
+              border: 'none',
+              borderBottom: activeTab === 'exames' ? '3px solid #007bff' : 'none',
+              backgroundColor: 'transparent',
+              cursor: 'pointer',
+            }}
+          >
+            Exames
+          </button>
         </div>
-		<div className="input-container">
-            <input type="text" placeholder="CRM" value={crm} onChange={(e) => setCrm(e.target.value)} />
-     
-        <div className="select-container">
-        <select
-          value={uf_crm}
-          onChange={(e) => setUfCRM(e.target.value)}
-          required
-        >
-         <option value="">Selecione UF...</option>
-          {estados.map((sigla) => (
-            <option key={sigla} value={sigla}>
-              {sigla}
-            </option>
-         ))}
-       </select>
-	   {/*  <button type="submit">{editId ? 'Atualizar' : 'Cadastrar'}</button>      */}
-		</div>  
-        
-        
-        
-      
-        </div>  
-       
-       
-         
-        {/*<input placeholder="ID do Usuario" onChange={(e) => setIdUsuario(e.target.value)} />*/}
 
-        <div className="button-container">
-                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}></div>  
-                  <button
-                    type="submit"
-                    className="button button-submit"
-                    onClick={() => console.log('Botão Enviar clicado')}
-                  >
-                   {editId ? 'Atualizar' : 'Cadastrar'}
-                  </button>
-
-                      {/* Botão Cancelar */}
-                      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}></div>
-                        <button onClick={() => resetForm()} 
-                              style={{
-                              padding: '10px 20px',
-                              
-                              border: 'none',
-                              borderRadius: '5px',
-                              cursor: 'pointer',
-                          }}
-                          className="button button-cancelar"
-                        >
-                        Cancelar
-                        </button>
-
-                        {/* Botão Voltar */}
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}></div>
-                        <button onClick={() => router.push('/menu')} 
-                              style={{
-                              padding: '10px 20px',
-                            
-                              border: 'none',
-                              borderRadius: '5px',
-                              cursor: 'pointer',
-                          }}
-                          className="button button-back"
-                        >
-                        Voltar ao Menu
-                        </button>
-                      </div>   
+        {/* Conteúdo das Abas */}
+        <div style={{ border: '1px solid #ddd', borderRadius: '5px', padding: '20px' }}>
+          {activeTab === 'consulta' && (
+            <form onSubmit={handleSubmit}>
+          
+          <div className="form-row">
+           <div className="form-group">
+             <label className="form-label">Selecione o Paciente:</label>
+          
+             <select
+                value={selectedPaciente}
+                onChange={(e) => setSelectedPaciente(e.target.value)}
+                required
+              >
+                <option value="">Selecione...</option>
                 
-         
-      </form>
+                {Array.isArray(pacientes) && pacientes.length > 0 ? (
+                  pacientes.map((paciente) => (
+                    <option key={paciente.id} value={paciente.id}>
+                      {paciente.nome}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>Nenhum paciente disponível</option>
+                )}
+              </select>
 
-      {medicos.length > 0 ? (
-         <table border="1" style={{ width: '100%', marginTop: '20px'}}>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nome</th>
-              <th>Especialidade</th>
-              <th>Telefone</th>
-              <th>CRM</th>
-              <th>UF CRM</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {medicos.map((medico) => (
-              <tr key={medico.id}>
-                <td>{medico.id}</td>
-                <td>{medico.nome}</td>
-                <td>{medico.especialidade}</td>
-                <td>{medico.telefone}</td>
-                <td>{medico.crm}</td>
-                <td>{medico.uf_crm}</td>
-                <td>
-                  <button onClick={() => handleEdit(medico.id)}style={{
-                        marginRight: '5px',
-                        padding: '5px',
-                        border: 'none',
-                        backgroundColor: '#ffc107',
-                        color: '#fff',
-                        borderRadius: '3px',
-                        cursor: 'pointer',
-                      }}>Editar</button>
-                  <button onClick={() => handleDelete(medico.id)}style={{
-                        padding: '5px',
-                        border: 'none',
-                        backgroundColor: '#dc3545',
-                        color: '#fff',
-                        borderRadius: '3px',
-                        cursor: 'pointer',
-                      }}>Excluir</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>Nenhum médico cadastrado.</p>
-      )}
-    </Layout>
+          
+          <div>
+          <div className="form-group">
+          <label className="form-label">Data da Consulta:</label>
+            <input
+            type="date"
+            value={dtconsulta}
+            onChange={(e) => setDtconsulta(e.target.value)}
+            required
+          />
+         </div>
+         </div>
+
+          </div>
+          </div>
+         <div>
+         
+           <div className="form-group">
+             <label className="form-label">Observações Médicas:</label>
+          
+          <textarea
+            value={obs}
+            style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+            onChange={(e) => setObs(e.target.value)}
+            required
+          ></textarea>
+         </div>
+         </div>
+
+         <div className="form-group">
+             <label className="form-label">Medicamentos:</label>
+          
+          <textarea
+            value={medicamento}
+            style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+            onChange={(e) => setMedicamento(e.target.value)}
+            required
+          ></textarea>
+         </div>
+
+         <div className="form-group">
+             <label className="form-label">Observações na entrega dos Medicamentos:</label>
+          
+          <textarea
+            value={obs_medicamento}
+            style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+            onChange={(e) => setObsMedicamento(e.target.value)}
+            required
+          ></textarea>
+         </div>
+         
+         {/* Inclusão dos checkboxes */}
+         <div>
+            <input
+              type="checkbox"
+              id="gerarReceita"
+              onChange={(e) => setGerarReceita(e.target.checked)}
+            />
+            <label htmlFor="gerarReceita">Gerar Receita</label>
+                {gerarReceita && (
+                  <div>
+                  <textarea
+                    placeholder="Digite a receita"
+                    value={receitaTexto}
+                    style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+                    onChange={(e) => setReceitaTexto(e.target.value)}
+                    required
+                  ></textarea>
+                   <button 
+            type="button"
+            onClick={() => gerarPDF('Receita Médica', receitaTexto)}
+            style={{ padding: '5px 10px', backgroundColor: '#17a2b8', color: '#fff', border: 'none', borderRadius: '5px', marginTop: '5px' }}
+          >
+            Gerar PDF
+          </button>
+        </div>
+                )}
+              </div>
+              <div>
+                <input
+                  type="checkbox"
+                  id="gerarExame"
+                  onChange={(e) => setGerarExame(e.target.checked)}
+                />
+               <label htmlFor="gerarExame">Gerar Exame</label>
+                {gerarExame && (
+                  <div>
+                  <textarea
+                    placeholder="Digite o exame"
+                    value={exameTexto}
+                    style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+                    onChange={(e) => setExameTexto(e.target.value)}
+                    required
+                  ></textarea>
+                   <button 
+            type="button"
+            onClick={() => gerarPDF('Pedido de Exame', exameTexto)}
+            style={{ padding: '5px 10px', backgroundColor: '#17a2b8', color: '#fff', border: 'none', borderRadius: '5px', marginTop: '5px' }}
+          >
+            Gerar PDF
+          </button>
+        </div>
+                )}
+              </div>
+              
+         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+              <button type="submit" style={{ padding: '10px', backgroundColor: '#007bff', color: '#fff' }}>
+                Salvar Consulta
+              </button>
+             
+            <button
+              onClick={() => router.push('/menu')}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#6c757d',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                display: 'flex'
+              }}
+            >
+              Voltar ao Menu
+            </button>
+           
+        </div>
+            </form>
+          )}
+
+        {activeTab === 'fichamedica' && (
+         <div>
+            <div>
+              <label>Pesquisar Paciente:</label>
+              <input
+                type="text"
+                placeholder="Digite o ID ou Nome"
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
   
+              <button onClick={() => fetchDadosGeralConsulta('id', searchValue)}>Buscar por ID</button>
+              <button onClick={() => fetchDadosGeralConsulta('nome', searchValue)}>Buscar por Nome</button>
+
+            </div>
+             {/* Exibição dos dados do paciente */}
+    {dadosPaciente && (
+      <div>
+        <h3>Dados do Paciente</h3>
+        <p><strong>Nome:</strong> {dadosPaciente.nome}</p>
+        <p><strong>CPF:</strong> {dadosPaciente.cpf}</p>
+        <p><strong>Telefone:</strong> {dadosPaciente.telefone}</p>
+        <p><strong>Cidade:</strong> {dadosPaciente.cidade}</p>
+        <p><strong>Data de Nascimento:</strong> {formatarData(dadosPaciente.dtnascimento)}</p>
+        <p><strong>UF:</strong> {dadosPaciente.uf}</p>
+      </div>
+    )}
+
+    </div>
+          )}
+
+          {activeTab === 'prescricoes' && (
+          <div>
+             <h2>Prescrições</h2>
+             {prescricoes.length > 0 ? (
+               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+               <thead>
+                 <tr style={{ backgroundColor: '#007bff', color: '#fff' }}>
+                   <th style={estilos.th}>Data da Consulta</th>
+                   <th style={estilos.th}>Descrição</th>
+                   
+                 </tr>
+               </thead>
+               <tbody>
+                 {prescricoes.map((prescricao, index) => (
+                   <tr key={index} style={index % 2 === 0 ? estilos.linhaPar : estilos.linhaImpar}>
+                     <td style={estilos.td}>{formatarData(prescricao.dtconsulta) || '-'}</td>
+                     <td style={estilos.td}>{prescricao.obs || '-'}</td>
+                    
+                  </tr>
+                                     
+                 ))}
+                </tbody>
+                </table>
+             ) : (
+               <p>Nenhuma prescrição encontrada.</p>
+             )}
+           </div>
+          )}
+        </div>
+
+        {activeTab === 'medicamentos' && (
+  <div>
+    <h2>Medicamentos</h2>
+    {medicamentos.length > 0 ? (
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead>
+          <tr style={{ backgroundColor: '#007bff', color: '#fff' }}>
+            <th style={estilos.th}>Descrição</th>
+            <th style={estilos.th}>Data do Pedido</th>
+            <th style={estilos.th}>Data da Manipulação</th>
+            <th style={estilos.th}>Data da Chegada</th>
+            <th style={estilos.th}>Data da Entrega</th>
+            <th style={estilos.th}>Observação</th>
+          </tr>
+        </thead>
+        <tbody>
+          {medicamentos.map((medicamento, index) => (
+            <tr key={index} style={index % 2 === 0 ? estilos.linhaPar : estilos.linhaImpar}>
+              <td style={estilos.td}>{medicamento.descricao}</td>
+              <td style={estilos.td}>{formatarData(medicamento.dt_pedido) || '-'}</td>
+              <td style={estilos.td}>{formatarData(medicamento.dt_manipulacao) || '-'}</td>
+              <td style={estilos.td}>{formatarData(medicamento.dt_chegada) || '-'}</td>
+              <td style={estilos.td}>{formatarData(medicamento.dt_entrega) || '-'}</td>
+              <td style={estilos.td}>{medicamento.observacao || '-'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    ) : (
+      <p>Nenhum medicamento encontrado.</p>
+    )}
+  </div>
+)}
+
+
+        
+   
+        {activeTab === 'receitas' && (
+  <div>
+    <h2>Receitas</h2>
+    {receitas.length > 0 ? (
+       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+     
+        <thead>
+        <tr style={{ backgroundColor: '#007bff', color: '#fff' }}>
+            <th style={estilos.th}>Data</th>
+            <th style={estilos.th}>Receita</th>
+            <th style={estilos.th}>Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          {receitas.map((receita, index) => (
+            <tr key={index}>
+              <td>{formatarData(receita.dtconsulta)}</td>
+              <td>{receita.receita}</td>
+              <td>
+                <button 
+                  onClick={() => gerarPDF('Receita Médica', receita.receita)}
+                  style={{ padding: '5px 10px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '5px' }}
+                >
+                  Gerar PDF
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    ) : (
+      <p>Nenhuma receita encontrada.</p>
+    )}
+  </div>
+)}
+
+{activeTab === 'exames' && (
+  <div>
+    <h2>Exames</h2>
+    {exames.length > 0 ? (
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+     
+      <thead>
+      <tr style={{ backgroundColor: '#007bff', color: '#fff' }}>
+            <th>Data</th>
+            <th>Exame</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          {exames.map((exame, index) => (
+            <tr key={index}>
+              <td>{formatarData(exame.dtconsulta)}</td>
+              <td>{exame.nome_exame}</td>
+              <td>
+                <button 
+                  onClick={() => gerarPDF('Pedido de Exame', exame.nome_exame)}
+                  style={{ padding: '5px 10px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '5px' }}
+                >
+                  Gerar PDF
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    ) : (
+      <p>Nenhum exame encontrado.</p>
+    )}
+  </div>
+)}
+
+</div>
+    </Layout>
   );
 }
