@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 
 
+
 export default function CadPaciente() {
 
   const [pacientes, setPacientes] = useState([]);
@@ -22,7 +23,8 @@ export default function CadPaciente() {
   const [idpropag, setIdpropag] = useState(''); // ID selecionado da combo
   const [propagandaOptions, setPropagandaOptions] = useState([]);
   const router = useRouter();
-  const [setTipotratOptions] = useState('');
+  //const [tipotratOptions, setTipotratOptions] = useState([]); // Corrigindo o estado
+
 
   const estados = [
     'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO',
@@ -56,33 +58,33 @@ export default function CadPaciente() {
     fetchPropagandas();
   }, [router]);
 
-  // Carregar dados do usuário e lista de pacientes
-  useEffect(() => {
-    const id = localStorage.getItem('id_usuario');
-    if (id) {
-      //setId_Usuario(id);
-      fetchPacientes();
-      fetchTipotratOptions(); // Carregar opções da tabela `tipotrat`
-    } else {
-      alert('Usuário não autenticado! Faça o login.');
-      router.push('/login');
-    }
-  }, [router, fetchTipotratOptions]);
+ 
+ 
 
    // Função para buscar dados da tabela `tipotrat`
-   const fetchTipotratOptions = async () => {
+  /*  const fetchTipotratOptions = useCallback(async () => {
     try {
       const res = await fetch('/api/gettipotrat');
       if (res.ok) {
         const data = await res.json();
-        setTipotratOptions(data); // Atualiza o estado com os dados da API
+        setTipotratOptions(data);
       }
     } catch (error) {
       console.error('Erro ao buscar tipos de tratamento:', error);
     }
-    
+  }, [setTipotratOptions]); // Incluindo `setTipotratOptions` na lista de dependências */
 
-      };
+   // Carregar dados do usuário e lista de pacientes
+  useEffect(() => {
+    const id = localStorage.getItem('id_usuario');
+    if (id) {
+      fetchPacientes();
+      //fetchTipotratOptions(); // Agora garantimos que esta função está estável e não causa re-renderizações desnecessárias
+    } else {
+      alert('Usuário não autenticado! Faça o login.');
+      router.push('/login');
+    }
+  }, [router]); // `fetchTipotratOptions` é agora estável com `useCallback`
   
 
   // Buscar pacientes no banco
