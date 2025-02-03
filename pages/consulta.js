@@ -142,6 +142,146 @@ export default function Consultas() {
     },
   };
 
+  const styles = {
+    tabContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      gap: '10px',
+      marginBottom: '20px',
+    },
+    activeTab: {
+      backgroundColor: '#007bff',
+      color: '#fff',
+      fontWeight: 'bold',
+      border: 'none',
+      padding: '10px 20px',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      transition: 'background-color 0.3s ease',
+    },
+    inactiveTab: {
+      backgroundColor: '#6c757d',
+      color: '#fff',
+      fontWeight: 'normal',
+      border: 'none',
+      padding: '10px 20px',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      transition: 'background-color 0.3s ease',
+    },
+    tabContent: {
+      border: '1px solid #ddd',
+      borderRadius: '10px',
+      padding: '20px',
+      backgroundColor: '#fff',
+      boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+    },
+    form: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '15px',
+    },
+    formGroup: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '5px',
+    },
+    label: {
+      fontWeight: 'bold',
+      color: '#333',
+    },
+    input: {
+      padding: '10px',
+      borderRadius: '5px',
+      border: '1px solid #ccc',
+      backgroundColor: '#f8f9fa',
+    },
+    select: {
+      padding: '10px',
+      borderRadius: '5px',
+      border: '1px solid #ccc',
+      backgroundColor: '#f8f9fa',
+    },
+    textarea: {
+      padding: '10px',
+      borderRadius: '5px',
+      border: '1px solid #ccc',
+      backgroundColor: '#f8f9fa',
+      resize: 'none',
+    },
+    checkboxGroup: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '10px',
+    },
+    buttonContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      gap: '10px',
+    },
+    submitButton: {
+      padding: '10px 15px',
+      backgroundColor: '#007bff',
+      color: '#fff',
+      borderRadius: '5px',
+      border: 'none',
+      cursor: 'pointer',
+    },
+    cancelButton: {
+      padding: '10px 15px',
+      backgroundColor: '#6c757d',
+      color: '#fff',
+      borderRadius: '5px',
+      border: 'none',
+      cursor: 'pointer',
+    },
+    pdfButton: {
+      padding: '5px 10px',
+      backgroundColor: '#17a2b8',
+      color: '#fff',
+      borderRadius: '5px',
+      border: 'none',
+      cursor: 'pointer',
+    },
+    table: {
+      width: '100%',
+      borderCollapse: 'collapse',
+      marginTop: '15px',
+    },
+    fichaContainer: {
+      backgroundColor: '#f8f9fa',
+      padding: '20px',
+      borderRadius: '10px',
+      border: '1px solid #ddd',
+      boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+      marginTop: '15px',
+    },
+    fichaContent: {
+      marginTop: '20px',
+      padding: '15px',
+      borderRadius: '10px',
+      backgroundColor: '#fff',
+      border: '1px solid #ddd',
+      boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+    },
+    table: {
+      width: '100%',
+      borderCollapse: 'collapse',
+      marginTop: '15px',
+    },
+    th: {
+      backgroundColor: '#007bff',
+      color: '#fff',
+      padding: '10px',
+      textAlign: 'left',
+    },
+    td: {
+      padding: '10px',
+      border: '1px solid #ddd',
+    },
+  };
+  
+
   // Função para formatar datas (YYYY-MM-DD para DD/MM/YYYY)
 const formatarData = (data) => {
   if (!data) return "-";
@@ -155,89 +295,35 @@ const formatarData = (data) => {
       <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px' }}>
         <h1 style={{ textAlign: 'center', color: '#333' }}>Consultas</h1>
 
+       {/*  style={{ padding: '5px 10px', backgroundColor: '#17a2b8', color: '#fff', border: 'none', borderRadius: '5px', marginTop: '5px' }} */}
+
         {/* Navegação entre as abas */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-          <button
-            onClick={() => setActiveTab('consulta')}
-            style={{
-              padding: '10px 20px',
-              border: 'none',
-              borderBottom: activeTab === 'consulta' ? '3px solid #007bff' : 'none',
-              backgroundColor: 'transparent',
-              cursor: 'pointer',
-            }}
-          >
-            Consulta
-          </button>
-          <button
-            onClick={() => setActiveTab('fichamedica')}
-            style={{
-              padding: '10px 20px',
-              border: 'none',
-              borderBottom: activeTab === 'fichamedica' ? '3px solid #007bff' : 'none',
-              backgroundColor: 'transparent',
-              cursor: 'pointer',
-            }}
-          >
-            Ficha Médica
-          </button>
-        
-        <button
-            onClick={() => setActiveTab('prescricoes')}
-            style={{
-              padding: '10px 20px',
-              border: 'none',
-              borderBottom: activeTab === 'prescricoes' ? '3px solid #007bff' : 'none',
-              backgroundColor: 'transparent',
-              cursor: 'pointer',
-            }}
-          >
-            Prescrições Anteriores
-          </button>
+  {/* Navegação entre as abas */}
+<div style={styles.tabContainer}>
+  {[
+    { id: 'consulta', label: 'Consulta' },
+    { id: 'fichamedica', label: 'Ficha Médica' },
+    { id: 'prescricoes', label: 'Prescrições' },
+    { id: 'medicamentos', label: 'Medicamentos' },
+    { id: 'receitas', label: 'Receitas' },
+    { id: 'exames', label: 'Exames' },
+  ].map((tab) => (
+    <button
+      key={tab.id}
+      onClick={() => setActiveTab(tab.id)}
+      style={activeTab === tab.id ? styles.activeTab : styles.inactiveTab}
+    >
+      {tab.label}
+    </button>
+  ))}
+</div>
 
-          <button
-            onClick={() => setActiveTab('medicamentos')}
-            style={{
-              padding: '10px 20px',
-              border: 'none',
-              borderBottom: activeTab === 'medicamentos' ? '3px solid #007bff' : 'none',
-              backgroundColor: 'transparent',
-              cursor: 'pointer',
-            }}
-          >
-            Medicamentos
-          </button>
-
-          <button
-            onClick={() => setActiveTab('receitas')}
-            style={{
-              padding: '10px 20px',
-              border: 'none',
-              borderBottom: activeTab === 'receitas' ? '3px solid #007bff' : 'none',
-              backgroundColor: 'transparent',
-              cursor: 'pointer',
-            }}
-          >
-            Receitas
-          </button>
-
-          <button
-            onClick={() => setActiveTab('exames')}
-            style={{
-              padding: '10px 20px',
-              border: 'none',
-              borderBottom: activeTab === 'exames' ? '3px solid #007bff' : 'none',
-              backgroundColor: 'transparent',
-              cursor: 'pointer',
-            }}
-          >
-            Exames
-          </button>
-        </div>
 
         {/* Conteúdo das Abas */}
-        <div style={{ border: '1px solid #ddd', borderRadius: '5px', padding: '20px' }}>
-          {activeTab === 'consulta' && (
+       {/*  <div style={{ border: '1px solid #ddd', borderRadius: '5px', padding: '20px' }}> */}
+       <div style={styles.tabContent}>
+        {activeTab === 'consulta' && (
+         
             <form onSubmit={handleSubmit}>
           
           <div className="form-row">
@@ -340,6 +426,7 @@ const formatarData = (data) => {
         </div>
                 )}
               </div>
+              
               <div>
                 <input
                   type="checkbox"
@@ -391,35 +478,38 @@ const formatarData = (data) => {
             </form>
           )}
 
-        {activeTab === 'fichamedica' && (
-         <div>
-            <div>
-              <label>Pesquisar Paciente:</label>
-              <input
-                type="text"
-                placeholder="Digite o ID ou Nome"
-                onChange={(e) => setSearchValue(e.target.value)}
-              />
-  
-              <button onClick={() => fetchDadosGeralConsulta('id', searchValue)}>Buscar por ID</button>
-              <button onClick={() => fetchDadosGeralConsulta('nome', searchValue)}>Buscar por Nome</button>
-
-            </div>
-             {/* Exibição dos dados do paciente */}
-    {dadosPaciente && (
-      <div>
-        <h3>Dados do Paciente</h3>
-        <p><strong>Nome:</strong> {dadosPaciente.nome}</p>
-        <p><strong>CPF:</strong> {dadosPaciente.cpf}</p>
-        <p><strong>Telefone:</strong> {dadosPaciente.telefone}</p>
-        <p><strong>Cidade:</strong> {dadosPaciente.cidade}</p>
-        <p><strong>Data de Nascimento:</strong> {formatarData(dadosPaciente.dtnascimento)}</p>
-        <p><strong>UF:</strong> {dadosPaciente.uf}</p>
+{activeTab === 'fichamedica' && (
+    <div style={styles.fichaContainer}>
+      <h3>Pesquisar Paciente:</h3>
+      <input
+        type="text"
+        placeholder="Digite o ID ou Nome"
+        onChange={(e) => setSearchValue(e.target.value)}
+        style={styles.input}
+      />
+      <div style={styles.buttonContainer}>
+        <button onClick={() => fetchDadosGeralConsulta('id', searchValue)} style={styles.actionButton}>Buscar por ID</button>
+        <button onClick={() => fetchDadosGeralConsulta('nome', searchValue)} style={styles.actionButton}>Buscar por Nome</button>
       </div>
-    )}
 
+      {/* Exibição dos dados do paciente */}
+      {dadosPaciente && (
+        <div style={styles.fichaContent}>
+          <h3>Dados do Paciente</h3>
+          <table style={styles.table}>
+            <tbody>
+              <tr><th>Nome:</th><td>{dadosPaciente.nome}</td></tr>
+              <tr><th>CPF:</th><td>{dadosPaciente.cpf}</td></tr>
+              <tr><th>Telefone:</th><td>{dadosPaciente.telefone}</td></tr>
+              <tr><th>Cidade:</th><td>{dadosPaciente.cidade}</td></tr>
+              <tr><th>Data de Nascimento:</th><td>{formatarData(dadosPaciente.dtnascimento)}</td></tr>
+              <tr><th>UF:</th><td>{dadosPaciente.uf}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
-          )}
+  )}
 
           {activeTab === 'prescricoes' && (
           <div>

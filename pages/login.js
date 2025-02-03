@@ -53,7 +53,7 @@ export default function Login() {
   return (
     <div>
       <Layout>
-      <div class="page">
+      <div className="page">
       <div className="login-container">
       {/* Imagem ao lado */}
       <div className="image-container">
@@ -61,18 +61,18 @@ export default function Login() {
        
       </div>
       
-        <form method="POST" class="formLogin">
+        <form method="POST" className="formLogin">
         
-        <div class="titulo">
+        <div className="titulo">
           <h1>Login</h1>
-          <div class="barra-horizontal"></div>
+          <div className="barra-horizontal"></div>
         </div>
             <p>Digite os seus dados de acesso nos campos abaixo.</p>
-            <label for="text">Usuário</label>
-            <input class="campo-input" type="text" placeholder="Digite seu login" value={usuario} autofocus="true" onChange={(e) => setLogin(e.target.value)}/>
-            <label for="password">Senha</label>
+            <label htmlFor="text">Usuário</label>
+            <input className="campo-input" type="text" placeholder="Digite seu login" value={usuario} autoFocus="true" onChange={(e) => setLogin(e.target.value)}/>
+            <label htmlFor="password">Senha</label>
             <input type="password" placeholder="Digite sua senha" value={senha} onChange={(e) => setSenha(e.target.value)}/>
-            <div class="lembrar-me">
+            <div className="lembrar-me">
                <input type="checkbox" /> <p>Lembrar-me</p>
             </div>
             <link href="/" />Esqueci minha senha

@@ -174,7 +174,7 @@ export default function Medicos() {
           onChange={(e) => setUfCRM(e.target.value)}
           required
         >
-         <option value="">Selecione UF...</option>
+         <option value="">Selecione UF...</option> 
           {estados.map((sigla) => (
             <option key={sigla} value={sigla}>
               {sigla}
