@@ -143,12 +143,12 @@ export default function Consultas() {
   };
 
   const styles = {
-    tabContainer: {
+   /*  tabContainer: {
       display: 'flex',
       justifyContent: 'center',
       gap: '10px',
       marginBottom: '20px',
-    },
+    }, */
     activeTab: {
       backgroundColor: '#007bff',
       color: '#fff',

@@ -155,6 +155,23 @@ const formatDateForInput = (dateString) => {
         >
           Pesquisar
         </button>
+
+        <button
+              onClick={() => router.push('/menu')}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#6c757d',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                textAlign: 'center'
+              }}
+            >
+              Voltar ao Menu
+            </button>
+
+
       </div>
 
       {/* Mensagens de Sucesso e Erro */}

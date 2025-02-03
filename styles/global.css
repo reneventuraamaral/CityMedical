@@ -534,3 +534,57 @@ body {
     font-size: 20px;
   }
 }
+
+.tabContainer {
+  display: flex;
+  flex-wrap: wrap;  /* Permite que os botões quebrem para a linha de baixo */
+  justify-content: center;
+  gap: 5px; /* Espaçamento entre os botões */
+  padding: 10px;
+}
+
+.tabContainer button {
+  flex: 1; /* Distribui o tamanho dos botões de forma igual */
+  min-width: 120px; /* Tamanho mínimo dos botões */
+  padding: 8px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* Estilo para botão ativo */
+.tabContainer button.activeTab {
+  background-color: #0056b3;
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 768px) {
+  .tabContainer {
+    flex-direction: row; /* Mantém os botões lado a lado */
+    justify-content: space-around; /* Distribui os botões melhor */
+  }
+
+  .tabContainer button {
+    font-size: 12px; /* Reduz tamanho da fonte */
+    padding: 6px 10px; /* Reduz o padding */
+    min-width: 100px; /* Permite que os botões fiquem menores */
+  }
+}
+
+/* Ajuste para celular pequeno (até 480px) */
+@media (max-width: 480px) {
+  .tabContainer {
+    flex-direction: column; /* Faz os botões ficarem um abaixo do outro */
+    align-items: center;
+  }
+
+  .tabContainer button {
+    width: 90%; /* Botões ocupam quase toda a largura */
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}

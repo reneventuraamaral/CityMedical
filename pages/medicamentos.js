@@ -69,6 +69,8 @@ export default function CadastroMedicamentos() {
                 <button onClick={handleSearch} style={{ marginLeft: '10px', padding: '5px 10px' }}>
                     Pesquisar
                 </button>
+
+              
             </div>
 
             {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
