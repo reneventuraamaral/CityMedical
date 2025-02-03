@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 export default function Menu() {
   const { user } = useUser(); // Mova o hook para dentro do componente funcional
-  const linhausuario = user ? `Usuário: ${user.nome}` : 'Não logado'; 
+  //const linhausuario = user ? `Usuário: ${user.nome}` : 'Não logado'; 
   const router = useRouter();
 
   useEffect(() => {

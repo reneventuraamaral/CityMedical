@@ -22,7 +22,7 @@ export default function CadPaciente() {
   const [idpropag, setIdpropag] = useState(''); // ID selecionado da combo
   const [propagandaOptions, setPropagandaOptions] = useState([]);
   const router = useRouter();
-  const [tipotratOptions, setTipotratOptions] = useState('');
+  const [setTipotratOptions] = useState('');
 
   const estados = [
     'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO',

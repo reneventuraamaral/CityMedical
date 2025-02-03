@@ -6,7 +6,7 @@ export default function ErrorPage() {
 
   useEffect(() => {
     router.push('/Manutencao'); 
-  }, []);
+  }, [router]);
 
   return null; // Não exibe nada, apenas redireciona
 }

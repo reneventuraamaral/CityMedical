@@ -6,7 +6,7 @@ export default function Home() {
 
   useEffect(() => {
     router.push('/login'); // Redireciona para login
-  }, []);
+  }, [router]);
 
   return <p>Redirecionando...</p>;
 }
