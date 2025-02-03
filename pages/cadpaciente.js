@@ -67,7 +67,7 @@ export default function CadPaciente() {
       alert('Usuário não autenticado! Faça o login.');
       router.push('/login');
     }
-  }, [router]);
+  }, [router, fetchTipotratOptions]);
 
    // Função para buscar dados da tabela `tipotrat`
    const fetchTipotratOptions = async () => {
@@ -80,7 +80,9 @@ export default function CadPaciente() {
     } catch (error) {
       console.error('Erro ao buscar tipos de tratamento:', error);
     }
-  };
+    
+
+      };
   
 
   // Buscar pacientes no banco

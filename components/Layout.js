@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/global.css';
+
 import { useUser } from '../context/UserContext'; // Importa o contexto
 import Image from 'next/image';
 
