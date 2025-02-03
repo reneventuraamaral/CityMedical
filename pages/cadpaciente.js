@@ -24,7 +24,7 @@ export default function CadPaciente() {
   const [propagandaOptions, setPropagandaOptions] = useState([]);
   const router = useRouter();
   //const [tipotratOptions, setTipotratOptions] = useState([]); // Corrigindo o estado
-  const [idUsuario, setIdUsuario] = useState(null);
+  const [setIdUsuario] = useState(null);
 
 
   useEffect(() => {
