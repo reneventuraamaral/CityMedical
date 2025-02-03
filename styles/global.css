@@ -210,9 +210,12 @@ body {
 }
 
 .campo-input {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+  width: 93%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
 }
 
 .formLogin {
@@ -487,15 +490,6 @@ body {
   height: 4px;
   background-color: #007bff;
   margin: 5px auto;
-}
-
-.campo-input {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
 }
 
 .buttonLogin {
