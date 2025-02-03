@@ -24,8 +24,15 @@ export default function CadPaciente() {
   const [propagandaOptions, setPropagandaOptions] = useState([]);
   const router = useRouter();
   //const [tipotratOptions, setTipotratOptions] = useState([]); // Corrigindo o estado
+  const [idUsuario, setIdUsuario] = useState(null);
 
 
+  useEffect(() => {
+    if (typeof window !== "undefined") { // Garante que está no navegador
+      const id = localStorage.getItem('id_usuario');
+      setIdUsuario(id);
+    }
+  }, []);
   const estados = [
     'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO',
     'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI',
@@ -64,16 +71,16 @@ export default function CadPaciente() {
    
 
    // Carregar dados do usuário e lista de pacientes
-  useEffect(() => {
+   useEffect(() => {
     const id = localStorage.getItem('id_usuario');
-    if (id) {
-      fetchPacientes();
-     
-    } else {
+    
+    if (!id) {
       alert('Usuário não autenticado! Faça o login.');
-      router.push('/login');
+      router.replace('/login');  // Usa replace para evitar histórico desnecessário
+    } else {
+      fetchPacientes();  // Somente busca pacientes se o usuário estiver autenticado
     }
-  }, [router]); 
+  }, []); // Removi `router` das dependências para evitar recarregamentos desnecessários
   
 
   // Buscar pacientes no banco
@@ -88,35 +95,33 @@ export default function CadPaciente() {
   // Submeter (Cadastrar ou Alterar)
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    const idUsuario = localStorage.getItem('id_usuario'); // Recupera corretamente
+  
+    if (!idUsuario) {
+      alert('Erro: Usuário não autenticado!');
+      router.push('/login');
+      return;
+    }
+  
     const endpoint = editId ? `/api/updatepaciente/${editId}` : '/api/cadpaciente';
     const method = editId ? 'PUT' : 'POST';
-
+  
     const res = await fetch(endpoint, {
       method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome, cpf, idpropag, telefone, logradouro, numero, complemento, bairro, cidade, uf, cep, dtnascimento, id_unidade, id_usuario: idUsuario}),
+      body: JSON.stringify({
+        nome, cpf, idpropag, telefone, logradouro, numero, complemento,
+        bairro, cidade, uf, cep, dtnascimento, id_unidade, id_usuario: idUsuario
+      }),
     });
-
+  
     if (res.ok) {
       alert(editId ? 'Paciente atualizado!' : 'Paciente cadastrado!');
-      setNome('');
-      setCpf('');
-      setIdpropag('');
-      setTelefone('');
-      setLogradouro('');
-      setNumero('');
-      setComplemento('');
-      setBairro('');
-      setCidade('');
-      setUf('');
-      setCep('');
-      setDtnascimento('');
-      setId_unidade('');
-      setEditId(null);
       fetchPacientes();
-      
     }
   };
+  
 
   // Editar Paciente
   const handleEdit = (paciente) => {
