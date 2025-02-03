@@ -126,7 +126,7 @@ export default function CadPaciente() {
       setId_unidade('');
       setEditId(null);
       fetchPacientes();
-      fetchTipotratOptions();
+      //fetchTipotratOptions();
     }
   };
 
