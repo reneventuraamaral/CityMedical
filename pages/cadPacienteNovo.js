@@ -27,7 +27,7 @@ export default function CadastroPaciente() {
 
   const [editId, setEditId] = useState(null);
 
-// Função para formatar datas
+// Função para formatar datas  dd/mm/yyyy
 const formatDate = (dateString) => {
     if (!dateString) return 'Sem data';
     const date = new Date(dateString);
@@ -36,6 +36,13 @@ const formatDate = (dateString) => {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
+
+  // Formatar data  
+  const formatarData = (data) => {
+    const partes = data.split("/");
+    return `${partes[2]}-${partes[1]}-${partes[0]}`; // Converte de DD/MM/YYYY para YYYY-MM-DD
+  };
+  
   const estados = [
     'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO',
     'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI',
@@ -76,7 +83,7 @@ const formatDate = (dateString) => {
     };
 
     fetchPropagandas();
-  }, [router]);
+  }, [router]); 
 
   
   // Buscar pacientes no banco
@@ -133,6 +140,7 @@ const formatDate = (dateString) => {
     if (res.ok) {
       alert(editId ? 'Paciente atualizado!' : 'Paciente cadastrado!');
       fetchPacientes();
+      resetForm();
     }
   };
   
@@ -150,11 +158,39 @@ const formatDate = (dateString) => {
     setCidade(paciente.cidade);
     setUf(paciente.uf);
     setCep(paciente.cep);
-    setDtnascimento(paciente.dtnascimento);
+    setDtnascimento(formatarData(paciente.dtnascimento));
     setId_unidade(paciente.id_unidade);
    
   };
+  // Excluir Paciente
+  const handleDelete = async (id) => {
+    if (confirm('Deseja realmente excluir o paciente?')) {
+      const res = await fetch(`/api/deletepaciente/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        alert('Paciente excluído!');
+        fetchPacientes();
+      }
+    }
+  };
 
+   // Resetar formulário
+   const resetForm = () => {
+    setEditId(null);
+    setNome('');
+    setCpf('');
+    setIdpropag('');
+    setTelefone('');
+    setLogradouro('');
+    setNumero('');
+    setComplemento('');
+    setBairro('');
+    setCidade('');
+    setUf('');
+    setCep('');
+    setDtnascimento('');
+    setId_unidade('');
+   
+  };
   return (
     <Layout>
        <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px' }}>
@@ -178,10 +214,12 @@ const formatDate = (dateString) => {
              borderRadius: '10px',
              backgroundColor: '#f9f9f9',
            }}
+
+
          >
-         <div style={{ display: 'flex', gap: '40px', marginBottom: '20px'}}>
-         <div style={{ flex: 1 }}>
-               <input
+        
+         <label>Nome:</label>   
+         <input
                  type="text"
                  placeholder="Nome"
                  value={nome}
@@ -189,8 +227,7 @@ const formatDate = (dateString) => {
                  required
                  maxWidthwidth={600}
                />
-           </div>
-           <div style={{ flex: 1 }}>
+         <label>CPF:</label>   
                 <input
                  type="text"
                  placeholder="9999.999.99-99"
@@ -199,12 +236,12 @@ const formatDate = (dateString) => {
                  required
                  width={100}
                />
-           </div>
-           </div>
-           <div>
+           
+           
+          
            {/* Substituição do input por combobox */}
           
-           <label>            </label>
+           <label>Propaganda</label>
          <select
            value={idpropag}
            onChange={(e) => setIdpropag(e.target.value)}
@@ -218,7 +255,9 @@ const formatDate = (dateString) => {
              </option>
            ))}
          </select>
-
+        
+         
+         <label>Unidade</label>
          <select
             value={id_unidade}
             onChange={(e) => setId_unidade(e.target.value)}
@@ -233,7 +272,8 @@ const formatDate = (dateString) => {
             ))}
          </select>
 
-           </div>
+           
+
            <label>Telefone:</label>
            <input
                type="text"
@@ -242,6 +282,7 @@ const formatDate = (dateString) => {
            onChange={(e) => setTelefone(e.target.value)}
            required
          />
+          <label>Logradouro:</label>
            <input
              type="text"
              placeholder="Logradouro"
@@ -249,6 +290,7 @@ const formatDate = (dateString) => {
              onChange={(e) => setLogradouro(e.target.value)}
              required
            />
+            <label>Número:</label>
            <input
              type="text"
              placeholder="Numero"
@@ -256,6 +298,7 @@ const formatDate = (dateString) => {
              onChange={(e) => setNumero(e.target.value)}
              required
            />
+            <label>Complemento:</label>
            <input
              type="text"
              placeholder="Complemento"
@@ -263,6 +306,7 @@ const formatDate = (dateString) => {
              onChange={(e) => setComplemento(e.target.value)}
              
            />
+            <label>Bairro:</label>
            <input
              type="text"
              placeholder="Bairro"
@@ -270,6 +314,8 @@ const formatDate = (dateString) => {
              onChange={(e) => setBairro(e.target.value)}
              required
            />
+
+           <label>Cidade:</label>
            <input
              type="text"
              placeholder="Cidade"
@@ -277,7 +323,7 @@ const formatDate = (dateString) => {
              onChange={(e) => setCidade(e.target.value)}
              required
            />
-        <div>
+        
          <label>Selecione o Estado (UF):</label>
            <select value={uf} onChange={(e) => setUf(e.target.value)} 
             required
@@ -299,12 +345,12 @@ const formatDate = (dateString) => {
            required
          />
         
-        </div>
-    
+       
+           <label>Data de Nascimento:</label>
            <input
              type="date"
              placeholder="Data de Nascimento"
-             value={dtnascimento}
+             value={dtnascimento || ""}
              onChange={(e) => setDtnascimento(e.target.value)}
              required
            />
@@ -322,6 +368,33 @@ const formatDate = (dateString) => {
            >
              {editId ? 'Atualizar' : 'Cadastrar'}
            </button>
+
+           <button onClick={() => resetForm()} 
+                              style={{
+                              padding: '10px 20px',
+                              color: '#fff',
+                              border: 'none',
+                              borderRadius: '5px',
+                              cursor: 'pointer',
+                          }}
+                          className="button button-cancelar"
+                        >
+                        Cancelar
+             </button>
+             <button
+             onClick={() => router.push('/menu')}
+             style={{
+               padding: '10px 20px',
+               backgroundColor: '#6c757d',
+               color: '#fff',
+               border: 'none',
+               borderRadius: '5px',
+               cursor: 'pointer',
+             }}
+           >
+             Voltar ao Menu
+           </button>
+
          </form>
    
          {/* Lista de Pacientes */}
