@@ -24,7 +24,11 @@ export default function CadPaciente() {
   const [propagandaOptions, setPropagandaOptions] = useState([]);
   const router = useRouter();
   //const [tipotratOptions, setTipotratOptions] = useState([]); // Corrigindo o estado
-  const [setIdUsuario] = useState(null);
+  const [idUsuario, setIdUsuario] = useState(null);
+
+
+  //const idUsuario = localStorage.getItem('id_usuario') || '';
+
 
 
   useEffect(() => {
@@ -33,6 +37,8 @@ export default function CadPaciente() {
       setIdUsuario(id);
     }
   }, []);
+
+  
   const estados = [
     'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO',
     'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI',
@@ -72,25 +78,29 @@ export default function CadPaciente() {
 
    // Carregar dados do usuário e lista de pacientes
    useEffect(() => {
-    const id = localStorage.getItem('id_usuario');
-    
-    if (!id) {
-      alert('Usuário não autenticado! Faça o login.');
-      router.replace('/login');  // Usa replace para evitar histórico desnecessário
-    } else {
-      fetchPacientes();  // Somente busca pacientes se o usuário estiver autenticado
-    }
-  }, []); // Removi `router` das dependências para evitar recarregamentos desnecessários
+    const checkAuth = () => {
+      const id = localStorage.getItem('id_usuario');
+      if (!id) {
+        router.push('/login');
+      } else {
+        fetchPacientes();
+      }
+    };
+  
+    checkAuth();
+  }, [router]);
   
 
   // Buscar pacientes no banco
   const fetchPacientes = async () => {
-    const res = await fetch('/api/getpacientes');
+    const res = await fetch('/api/getpacientesAntigo');
     if (res.ok) {
       const data = await res.json();
+      console.log("Pacientes recebidos:", data); // Verifica no console
       setPacientes(data);
     }
   };
+  
 
   // Submeter (Cadastrar ou Alterar)
   const handleSubmit = async (e) => {
