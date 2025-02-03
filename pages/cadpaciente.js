@@ -61,30 +61,19 @@ export default function CadPaciente() {
  
  
 
-   // Função para buscar dados da tabela `tipotrat`
-  /*  const fetchTipotratOptions = useCallback(async () => {
-    try {
-      const res = await fetch('/api/gettipotrat');
-      if (res.ok) {
-        const data = await res.json();
-        setTipotratOptions(data);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar tipos de tratamento:', error);
-    }
-  }, [setTipotratOptions]); // Incluindo `setTipotratOptions` na lista de dependências */
+   
 
    // Carregar dados do usuário e lista de pacientes
   useEffect(() => {
     const id = localStorage.getItem('id_usuario');
     if (id) {
       fetchPacientes();
-      //fetchTipotratOptions(); // Agora garantimos que esta função está estável e não causa re-renderizações desnecessárias
+     
     } else {
       alert('Usuário não autenticado! Faça o login.');
       router.push('/login');
     }
-  }, [router]); // `fetchTipotratOptions` é agora estável com `useCallback`
+  }, [router]); 
   
 
   // Buscar pacientes no banco
@@ -121,12 +110,11 @@ export default function CadPaciente() {
       setCidade('');
       setUf('');
       setCep('');
-      //setId_Usuario('');
       setDtnascimento('');
       setId_unidade('');
       setEditId(null);
       fetchPacientes();
-      //fetchTipotratOptions();
+      
     }
   };
 
