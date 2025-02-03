@@ -36,7 +36,7 @@ export default function Menu() {
         <div className="vertical-menu">
           <ul className="menu">
             <li>
-              <Link href="/cadpaciente">Cadastro de Pacientes</Link> 
+              <Link href="/cadPacienteNovo">Cadastro de Pacientes</Link> 
             </li>
             <li>
               <Link href="/medicos">Cadastro de Médicos</Link>
@@ -72,7 +72,7 @@ export default function Menu() {
         <div className="vertical-menu">
           <ul className="menu">
             <li>
-              <Link href="/cadpaciente">Cadastro de Pacientes</Link> 
+              <Link href="/cadPacienteNovo">Cadastro de Pacientes</Link> 
             </li>
             <li>
               <Link href="/medicos">Cadastro de Médicos</Link>
@@ -92,7 +92,7 @@ export default function Menu() {
           <div className="vertical-menu">
           <ul className="menu">
             <li>
-              <Link href="/cadpaciente">Cadastro de Pacientes</Link> 
+              <Link href="/cadPacienteNovo">Cadastro de Pacientes</Link> 
             </li>
             <li>
               <Link href="/medicos">Cadastro de Médicos</Link>
