@@ -6,7 +6,7 @@ import Layout from '../components/Layout';
 export default function CadastroPaciente() {
   const router = useRouter();
   const [user, setUser] = useState(null);
-  const [, setIdUsuario] = useState("");
+  //const [, setIdUsuario] = useState("");
 
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
