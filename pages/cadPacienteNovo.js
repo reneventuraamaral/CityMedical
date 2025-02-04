@@ -23,9 +23,8 @@ export default function CadastroPaciente() {
   const [dtnascimento, setDtnascimento] = useState('');
   const [id_unidade, setId_unidade] = useState('');
   const [unidadeOptions, setUnidadeOptions] = useState([]);
-
-
   const [editId, setEditId] = useState(null);
+
 
 // Função para formatar datas  dd/mm/yyyy
 const formatDate = (dateString) => {
@@ -52,6 +51,8 @@ const formatDate = (dateString) => {
   // Pegar o ID do usuário logado ao carregar a página
   useEffect(() => {
     const id = localStorage.getItem("id_usuario");
+    console.log(localStorage.getItem("usuario"));
+
     if (!id) {
       router.push("/login"); // Redireciona para login se não estiver logado
     } else {
@@ -207,7 +208,6 @@ const formatDate = (dateString) => {
              display: 'flex',
              flexDirection: 'column',
              gap: '10px',
-             maxWidth: '600px',
              margin: 'auto',
              padding: '20px',
              border: '1px solid #ddd',
@@ -225,7 +225,7 @@ const formatDate = (dateString) => {
                  value={nome}
                  onChange={(e) => setNome(e.target.value)}
                  required
-                 maxWidthwidth={600}
+                 
                />
          <label>CPF:</label>   
                 <input

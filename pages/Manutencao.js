@@ -2,13 +2,14 @@ import Layout from '../components/Layout';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-export default function Manutencao() {
+const Manutencao = () => {
   const router = useRouter();
 
   return (
     <Layout>
       <div style={styles.container}>
-        <Image src="/images/city.jpg" alt="Logo da Clínica" width={150} height={80} />
+        <Image src="/images/city.jpg" alt="Logo da Clínica" width={150} height={80} priority /> 
+       
         <h1 style={styles.title}>Página em Manutenção</h1>
         <p style={styles.message}>Estamos trabalhando para melhorar sua experiência. Volte em breve!</p>
         
@@ -18,13 +19,14 @@ export default function Manutencao() {
       </div>
     </Layout>
   );
-}
+};
 
+export default Manutencao; // ✅ Certifique-se de que está exportando corretamente
 const styles = {
   container: {
     textAlign: 'center',
     padding: '50px',
-    maxWidth: '600px',
+    maxWidth: '600px',  // Certifique-se de que está correto
     margin: '0 auto',
     backgroundColor: '#fff',
     borderRadius: '10px',
