@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
 import Layout from '../components/Layout';
 
 export default function CadastroPaciente() {
+
   const router = useRouter();
   const [user, setUser] = useState(null);
   //const [, setIdUsuario] = useState("");
@@ -25,7 +25,48 @@ export default function CadastroPaciente() {
   const [id_unidade, setId_unidade] = useState('');
   const [unidadeOptions, setUnidadeOptions] = useState([]);
   const [editId, setEditId] = useState(null);
+  const [loading, setLoading] = useState(true); // ⬅ Adicionado estado de carregamento
 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const storedUser = localStorage.getItem("user");
+
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      } else {
+        router.push("/login");
+        return; // Para evitar execuções desnecessárias
+      }
+
+      try {
+        const [pacientesRes, propagandasRes, unidadesRes] = await Promise.all([
+          fetch("/api/getpacientesAntigo"),
+          fetch("/api/getPropagandas"),
+          fetch("/api/getUnidades")
+        ]);
+
+        const [pacientesData, propagandasData, unidadesData] = await Promise.all([
+          pacientesRes.json(),
+          propagandasRes.json(),
+          unidadesRes.json()
+        ]);
+
+        setPacientes(pacientesData);
+        setPropagandaOptions(propagandasData);
+        setUnidadeOptions(unidadesData);
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [router]);
+
+  if (loading) return <p>Carregando...</p>;
+  if (!user) return null; // Evita renderização indevida antes do redirecionamento
 
 // Função para formatar datas  dd/mm/yyyy
 const formatDate = (dateString) => {
@@ -48,82 +89,15 @@ const formatDate = (dateString) => {
     'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI',
     'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
   ];
-
-  // Pegar o ID do usuário logado ao carregar a página
-  useEffect(() => {
-    // Recupera os dados do localStorage
-    const storedUser = localStorage.getItem("user");
-
-    if (!storedUser) {
-      router.push("/login"); // Redireciona se não encontrar o usuário
-    } else {
-      setUser(JSON.parse(storedUser)); // Define os dados do usuário no estado
-    }
-  }, [router]);
-
-  if (!user) return null; // Evita piscar a tela antes de carregar os dados
-  carregarPacientes(); // Carregar pacientes cadastrados
-
-
   
-  // Função para carregar os pacientes do banco de dados
-  const carregarPacientes = async () => {
-    try {
-      const resposta = await axios.get("/api/getpacientesAntigo");
-      setPacientes(resposta.data);
-    } catch (error) {
-      console.error("Erro ao carregar pacientes:", error);
-    }
-  };
-
-   // Buscar as opções da tabela propaganda
-   useEffect(() => {
-    const fetchPropagandas = async () => {
-      try {
-        const res = await fetch('/api/getPropagandas');
-        const data = await res.json();
-        setPropagandaOptions(data);
-      } catch (error) {
-        console.error('Erro ao buscar propagandas:', error);
-      }
-    };
-
-    fetchPropagandas();
-  }, [router]); 
-
-  
-  // Buscar pacientes no banco
-  const fetchPacientes = async () => {
-    const res = await fetch('/api/getpacientesAntigo');
-    if (res.ok) {
-      const data = await res.json();
-      console.log("Pacientes recebidos:", data); // Verifica no console
-      setPacientes(data);
-    }
-  };
-
-   // Buscar unidades no banco
-   useEffect(() => {
-    const fetchUnidades = async () => {
-      try {
-        const res = await fetch('/api/getUnidades');
-        const data = await res.json();
-        console.log("Unidades recebidas:", data); // Verifica no console se os dados estão corretos
-        setUnidadeOptions(data); // Nome do setter corrigido
-      } catch (error) {
-        console.error("Erro ao buscar unidades:", error);
-      }
-    };
-  
-    fetchUnidades();
-  }, [router]);
-  
-
-   // Submeter (Cadastrar ou Alterar)
-   const handleSubmit = async (e) => {
+ 
+ 
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    const idUsuario = localStorage.getItem('id_usuario'); // Recupera corretamente
+    
+   // const idUsuario = localStorage.getItem('id_usuario');
+    const idUsuario = JSON.parse(localStorage.getItem("user"))?.id_usuario;
+
   
     if (!idUsuario) {
       alert('Erro: Usuário não autenticado!');
@@ -145,10 +119,16 @@ const formatDate = (dateString) => {
   
     if (res.ok) {
       alert(editId ? 'Paciente atualizado!' : 'Paciente cadastrado!');
-      fetchPacientes();
+      
+      // Recarregar lista de pacientes
+      const response = await fetch("/api/getpacientesAntigo");
+      const data = await response.json();
+      setPacientes(data);
+  
       resetForm();
     }
   };
+  
   
   // Editar Paciente
   const handleEdit = (paciente) => {
@@ -164,20 +144,27 @@ const formatDate = (dateString) => {
     setCidade(paciente.cidade);
     setUf(paciente.uf);
     setCep(paciente.cep);
+   // setDtnascimento(formatarData(paciente.dtnascimento));
     setDtnascimento(formatarData(paciente.dtnascimento));
+
     setId_unidade(paciente.id_unidade);
    
   };
   // Excluir Paciente
   const handleDelete = async (id) => {
     if (confirm('Deseja realmente excluir o paciente?')) {
-      const res = await fetch(`/api/deletepaciente/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        alert('Paciente excluído!');
-        fetchPacientes();
+      try {
+        const res = await fetch(`/api/deletepaciente/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          alert('Paciente excluído!');
+          setPacientes(); // Atualiza a lista de pacientes
+        }
+      } catch (error) {
+        console.error("Erro ao excluir paciente:", error);
       }
     }
   };
+  
 
    // Resetar formulário
    const resetForm = () => {
@@ -377,6 +364,7 @@ const formatDate = (dateString) => {
            <button onClick={() => resetForm()} 
                               style={{
                               padding: '10px 20px',
+                              backgroundColor: '#dc3545', // Vermelho para indicar ação de cancelar
                               color: '#fff',
                               border: 'none',
                               borderRadius: '5px',
@@ -441,6 +429,7 @@ const formatDate = (dateString) => {
                        <td>{paciente.nome}</td>
                        <td>{paciente.cpf}</td>
                        <td>{paciente.idpropag}</td>
+                       <td>{propagandaOptions.find(p => p.id === paciente.idpropag)?.veiculo || "Não informado"}</td>
                        <td>{paciente.telefone}</td>
                        <td>{paciente.logradouro}</td>
                        <td>{paciente.numero}</td>
@@ -506,3 +495,4 @@ const formatDate = (dateString) => {
        </Layout>
   );
 }
+
