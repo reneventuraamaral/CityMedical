@@ -5,6 +5,7 @@ import Layout from '../components/Layout';
 
 export default function CadastroPaciente() {
   const router = useRouter();
+  const [user, setUser] = useState(null);
   const [, setIdUsuario] = useState("");
 
   const [nome, setNome] = useState("");
@@ -50,17 +51,21 @@ const formatDate = (dateString) => {
 
   // Pegar o ID do usuário logado ao carregar a página
   useEffect(() => {
-    const id = localStorage.getItem("id_usuario");
-    console.log(localStorage.getItem("usuario"));
+    // Recupera os dados do localStorage
+    const storedUser = localStorage.getItem("user");
 
-    if (!id) {
-      router.push("/login"); // Redireciona para login se não estiver logado
+    if (!storedUser) {
+      router.push("/login"); // Redireciona se não encontrar o usuário
     } else {
-      setIdUsuario(id);
-      carregarPacientes(); // Carregar pacientes cadastrados
+      setUser(JSON.parse(storedUser)); // Define os dados do usuário no estado
     }
-  }, [router]);
+  }, []);
 
+  if (!user) return null; // Evita piscar a tela antes de carregar os dados
+  carregarPacientes(); // Carregar pacientes cadastrados
+
+
+  
   // Função para carregar os pacientes do banco de dados
   const carregarPacientes = async () => {
     try {
