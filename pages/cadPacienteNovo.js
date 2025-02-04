@@ -59,7 +59,7 @@ const formatDate = (dateString) => {
     } else {
       setUser(JSON.parse(storedUser)); // Define os dados do usuário no estado
     }
-  }, []);
+  }, [router]);
 
   if (!user) return null; // Evita piscar a tela antes de carregar os dados
   carregarPacientes(); // Carregar pacientes cadastrados
