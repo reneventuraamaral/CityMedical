@@ -55,7 +55,10 @@ export default function Consultas() {
 
     if (!valor) {
         console.warn("⚠️ Nenhum ID ou Nome foi fornecido!");
-        setMensagemErro && setMensagemErro("Informe um ID ou Nome para buscar.");
+        if (setMensagemErro) {
+          setMensagemErro("Informe um ID ou Nome para buscar.");
+        }
+        
         return;
     }
 
@@ -72,7 +75,10 @@ export default function Consultas() {
 
         if (response.status === 404 || !data.dadosPaciente || data.dadosPaciente.length === 0) {
             console.warn("⚠️ Paciente não encontrado.");
-            setMensagemErro && setMensagemErro("Paciente não encontrado.");
+            if (setMensagemErro) {
+              setMensagemErro("Paciente não encontrado.");
+            }
+            
             return;
         }
 
@@ -86,7 +92,10 @@ export default function Consultas() {
 
     } catch (error) {
         console.error("❌ Erro ao buscar dados do paciente:", error);
-        setMensagemErro && setMensagemErro("Erro ao buscar dados do paciente.");
+        if (setMensagemErro) {
+          setMensagemErro("Erro ao buscar dados do paciente.");
+        }
+        
     }
 };
 
