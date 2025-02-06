@@ -94,10 +94,10 @@ const formatDate = (dateString) => {
  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-   // const idUsuario = localStorage.getItem('id_usuario');
-    const idUsuario = JSON.parse(localStorage.getItem("user"))?.id_usuario;
-
+  
+    // 🛠 Obtém o usuário do estado corretamente
+   // const idUsuario = user?.id_usuario;
+    const idUsuario = user?.id;
   
     if (!idUsuario) {
       alert('Erro: Usuário não autenticado!');
@@ -108,26 +108,35 @@ const formatDate = (dateString) => {
     const endpoint = editId ? `/api/updatepaciente/${editId}` : '/api/cadpaciente';
     const method = editId ? 'PUT' : 'POST';
   
-    const res = await fetch(endpoint, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nome, cpf, idpropag, telefone, logradouro, numero, complemento,
-        bairro, cidade, uf, cep, dtnascimento, id_unidade, id_usuario: idUsuario
-      }),
-    });
+    try {
+      const res = await fetch(endpoint, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nome, cpf, idpropag, telefone, logradouro, numero, complemento,
+          bairro, cidade, uf, cep, dtnascimento, id_unidade, id_usuario: idUsuario
+        }),
+      });
   
-    if (res.ok) {
-      alert(editId ? 'Paciente atualizado!' : 'Paciente cadastrado!');
-      
-      // Recarregar lista de pacientes
-      const response = await fetch("/api/getpacientesAntigo");
-      const data = await response.json();
-      setPacientes(data);
+      if (res.ok) {
+        alert(editId ? 'Paciente atualizado!' : 'Paciente cadastrado!');
   
-      resetForm();
+        // Recarrega a lista de pacientes
+        const response = await fetch("/api/getpacientesAntigo");
+        const data = await response.json();
+        setPacientes(data);
+  
+        resetForm();
+      } else {
+        console.error("Erro ao cadastrar/atualizar paciente:", await res.text());
+        alert("Erro ao cadastrar/atualizar paciente.");
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      alert("Erro na requisição ao servidor.");
     }
   };
+  
   
   
   // Editar Paciente

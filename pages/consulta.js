@@ -23,6 +23,7 @@ export default function Consultas() {
 
   const [dadosPaciente, setDadosPaciente] = useState(null);
   const [prescricoes, setPrescricoes] = useState([]);
+  
   const [receitas, setReceitas] = useState([]);
   const [exames, setExames] = useState([]);
   const [medicamentos, setMedicamentos] = useState([]);
@@ -47,7 +48,51 @@ export default function Consultas() {
     fetchPacientes();
   }, [user, router]);
 
+
+
   const fetchDadosGeralConsulta = async (tipo, valor) => {
+    console.log("🟢 Tipo de busca:", tipo, "| Valor:", valor);
+
+    if (!valor) {
+        console.warn("⚠️ Nenhum ID ou Nome foi fornecido!");
+        setMensagemErro && setMensagemErro("Informe um ID ou Nome para buscar.");
+        return;
+    }
+
+    try {
+        console.log("🔄 Buscando paciente...");
+
+        // Define os parâmetros da URL corretamente
+        const param = tipo === "idPaciente" ? `id=${valor}` : `nome=${valor}`;
+
+        const response = await fetch(`/api/getPacienteDados?${param}`);
+        const data = await response.json();
+
+        console.log("✅ Resposta da API:", data);
+
+        if (response.status === 404 || !data.dadosPaciente || data.dadosPaciente.length === 0) {
+            console.warn("⚠️ Paciente não encontrado.");
+            setMensagemErro && setMensagemErro("Paciente não encontrado.");
+            return;
+        }
+
+        setDadosPaciente(data.dadosPaciente);
+        console.log("📋 Ficha Médica armazenadas no estado:", data.dadosPaciente);
+        setPrescricoes(data.prescricoes);
+        console.log("📋 Prescrições armazenadas no estado:", data.prescricoes);
+        setReceitas(data.receitas);
+        setExames(data.exames);
+        setMedicamentos(data.medicamentos);
+
+    } catch (error) {
+        console.error("❌ Erro ao buscar dados do paciente:", error);
+        setMensagemErro && setMensagemErro("Erro ao buscar dados do paciente.");
+    }
+};
+
+
+
+  /* const fetchDadosGeralConsulta = async (tipo, valor) => {
     if (!valor) {
       alert('Digite um ID ou Nome para buscar.');
       return;
@@ -65,7 +110,7 @@ export default function Consultas() {
       console.error('Erro ao buscar dados do paciente:', error);
       alert('Erro ao buscar os dados. Tente novamente.');
     }
-  };
+  }; */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -279,6 +324,45 @@ export default function Consultas() {
       padding: '10px',
       border: '1px solid #ddd',
     },
+    fichaContainer: {
+      padding: '20px',
+      background: '#f9f9f9',
+      borderRadius: '10px',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    },
+    input: {
+      padding: '10px',
+      marginBottom: '10px',
+      width: '100%',
+      borderRadius: '5px',
+      border: '1px solid #ccc',
+    },
+    buttonContainer: {
+      display: 'flex',
+      gap: '10px',
+      marginBottom: '20px',
+    },
+    table: {
+      width: '100%',
+      borderCollapse: 'collapse',
+      marginTop: '20px',
+      background: 'white',
+      borderRadius: '10px',
+      overflow: 'hidden',
+    },
+    th: {
+      background: '#007bff',
+      color: 'white',
+      padding: '10px',
+      textAlign: 'left',
+    },
+    td: {
+      padding: '10px',
+      borderBottom: '1px solid #ddd',
+    },
+    tr: {
+      background: '#f2f2f2',
+    },
   };
   
 
@@ -477,39 +561,52 @@ const formatarData = (data) => {
         </div>
             </form>
           )}
-
 {activeTab === 'fichamedica' && (
-    <div style={styles.fichaContainer}>
-      <h3>Pesquisar Paciente:</h3>
-      <input
-        type="text"
-        placeholder="Digite o ID ou Nome"
-        onChange={(e) => setSearchValue(e.target.value)}
-        style={styles.input}
-      />
-      <div style={styles.buttonContainer}>
-        <button onClick={() => fetchDadosGeralConsulta('id', searchValue)} style={styles.actionButton}>Buscar por ID</button>
-        <button onClick={() => fetchDadosGeralConsulta('nome', searchValue)} style={styles.actionButton}>Buscar por Nome</button>
-      </div>
-
-      {/* Exibição dos dados do paciente */}
-      {dadosPaciente && (
-        <div style={styles.fichaContent}>
-          <h3>Dados do Paciente</h3>
-          <table style={styles.table}>
-            <tbody>
-              <tr><th>Nome:</th><td>{dadosPaciente.nome}</td></tr>
-              <tr><th>CPF:</th><td>{dadosPaciente.cpf}</td></tr>
-              <tr><th>Telefone:</th><td>{dadosPaciente.telefone}</td></tr>
-              <tr><th>Cidade:</th><td>{dadosPaciente.cidade}</td></tr>
-              <tr><th>Data de Nascimento:</th><td>{formatarData(dadosPaciente.dtnascimento)}</td></tr>
-              <tr><th>UF:</th><td>{dadosPaciente.uf}</td></tr>
-            </tbody>
-          </table>
-        </div>
-      )}
+  <div style={styles.fichaContainer}>
+    <h3>Pesquisar Paciente:</h3>
+    <input
+      type="text"
+      placeholder="Digite o ID ou Nome"
+      onChange={(e) => setSearchValue(e.target.value)}
+      style={styles.input}
+    />
+    <div style={styles.buttonContainer}>
+      <button onClick={() => fetchDadosGeralConsulta('idPaciente', searchValue)}>Buscar por ID</button>
+      <button onClick={() => fetchDadosGeralConsulta('nome', searchValue)}>Buscar por Nome</button>
     </div>
-  )}
+
+    <h2>Dados do Paciente</h2>
+
+    {/* Exibição dos dados do paciente em uma tabela */}
+    {Array.isArray(dadosPaciente) && dadosPaciente.length > 0 ? (
+      <table style={styles.table}>
+        <thead>
+          <tr style={{ backgroundColor: '#007bff', color: '#fff' }}>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Data de Nascimento</th>
+            <th>Telefone</th>
+            <th>CPF</th>
+          </tr>
+        </thead>
+        <tbody>
+          {dadosPaciente.map((item) => (
+            <tr key={item.id} >
+              <td style={estilos.td}>{item.id}</td>
+              <td style={estilos.td}>{item.nome}</td>
+              <td style={estilos.td}>{formatarData(item.data_nascimento) || '-'}</td>
+              <td style={estilos.td}>{item.telefone || '-'}</td>
+              <td style={estilos.td}>{item.cpf || '-'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    ) : (
+      <p>Nenhuma ficha médica encontrada.</p>
+    )}
+  </div>
+)}
+
 
           {activeTab === 'prescricoes' && (
           <div>
