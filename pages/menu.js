@@ -60,6 +60,12 @@ export default function Menu() {
               <Link href="/consulta"> Consulta Médica</Link>
             </li>
             <li>
+              <Link href="/agendamentos"> Cadastro de Agendmentos</Link>
+            </li>
+            <li>
+              <Link href="/pesquisaAgendamentos"> Pesquisa de Agendmentos</Link>
+            </li>
+            <li>
               <Link href="/login"> Voltar ao Login</Link>
             </li>
           </ul>
@@ -79,6 +85,12 @@ export default function Menu() {
             </li>
             <li>
             <Link href="/consulta"> Consulta Médica</Link>
+            </li>
+            <li>
+              <Link href="/agendamentos"> Cadastro de Agendmentos</Link>
+            </li>
+            <li>
+              <Link href="/pesquisaAgendamentos"> Pesquisa de Agendmentos</Link>
             </li>
             <li>
               <Link href="/login"> Voltar ao Login</Link>
@@ -108,6 +120,12 @@ export default function Menu() {
             </li>
             <li>
               <Link href="/contratos"> Cadastro de Contratos e Pagamentos</Link>
+            </li>
+            <li>
+              <Link href="/agendamentos"> Cadastro de Agendmentos</Link>
+            </li>
+            <li>
+              <Link href="/pesquisaAgendamentos"> Pesquisa de Agendmentos</Link>
             </li>
             <li>
               <Link href="/login"> Voltar ao Login</Link>
