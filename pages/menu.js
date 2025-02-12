@@ -35,6 +35,9 @@ export default function Menu() {
           <>
         <div className="vertical-menu">
           <ul className="menu">
+          <li>
+              <Link href="/preAgendamento">Pré-Agendamento (Pacientes Novos)</Link> 
+            </li>
             <li>
               <Link href="/cadPacienteNovo">Cadastro de Pacientes</Link> 
             </li>
@@ -60,11 +63,12 @@ export default function Menu() {
               <Link href="/consulta"> Consulta Médica</Link>
             </li>
             <li>
-              <Link href="/agendamentos"> Cadastro de Agendmentos</Link>
+              <Link href="/agendamentos"> Cadastro de Agendamentos</Link>
             </li>
             <li>
-              <Link href="/pesquisaAgendamentos"> Pesquisa de Agendmentos</Link>
+              <Link href="/pesquisaAgendamentos"> Pesquisa de Agendamentos</Link>
             </li>
+
             <li>
               <Link href="/login"> Voltar ao Login</Link>
             </li>
@@ -77,6 +81,9 @@ export default function Menu() {
          
         <div className="vertical-menu">
           <ul className="menu">
+          <li>
+              <Link href="/preAgendamento">Pré-Agendamento (Pacientes Novos)</Link> 
+            </li>
             <li>
               <Link href="/cadPacienteNovo">Cadastro de Pacientes</Link> 
             </li>
@@ -87,10 +94,10 @@ export default function Menu() {
             <Link href="/consulta"> Consulta Médica</Link>
             </li>
             <li>
-              <Link href="/agendamentos"> Cadastro de Agendmentos</Link>
+              <Link href="/agendamentos"> Cadastro de Agendamentos</Link>
             </li>
             <li>
-              <Link href="/pesquisaAgendamentos"> Pesquisa de Agendmentos</Link>
+              <Link href="/pesquisaAgendamentos"> Pesquisa de Agendamentos</Link>
             </li>
             <li>
               <Link href="/login"> Voltar ao Login</Link>
@@ -103,6 +110,9 @@ export default function Menu() {
           <>
           <div className="vertical-menu">
           <ul className="menu">
+          <li>
+              <Link href="/preAgendamento">Pré-Agendamento (Pacientes Novos)</Link> 
+            </li>
             <li>
               <Link href="/cadPacienteNovo">Cadastro de Pacientes</Link> 
             </li>
@@ -122,10 +132,10 @@ export default function Menu() {
               <Link href="/contratos"> Cadastro de Contratos e Pagamentos</Link>
             </li>
             <li>
-              <Link href="/agendamentos"> Cadastro de Agendmentos</Link>
+              <Link href="/agendamentos"> Cadastro de Agendamentos</Link>
             </li>
             <li>
-              <Link href="/pesquisaAgendamentos"> Pesquisa de Agendmentos</Link>
+              <Link href="/pesquisaAgendamentos"> Pesquisa de Agendamentos</Link>
             </li>
             <li>
               <Link href="/login"> Voltar ao Login</Link>

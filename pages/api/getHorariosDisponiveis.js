@@ -19,9 +19,10 @@ export default async function handler(req, res) {
 
         // Buscar horários já agendados usando os nomes corretos das colunas
         const [agendamentos] = await connection.query(
-            "SELECT horario FROM agendamentos WHERE id_medico = ? AND dtconsulta = ?",
+            "SELECT DATE_FORMAT(horario, '%H:%i') as horario FROM agendamentos WHERE id_medico = ? AND dtconsulta = ?",
             [medico, data]
         );
+       
 
         // Criar um array com os horários ocupados
         const horariosOcupados = agendamentos.map(a => a.horario);

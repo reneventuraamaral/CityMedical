@@ -10,7 +10,9 @@ export default async function handler(req, res) {
         const connection = await connectToDatabase();
 
         let query = `
-            SELECT a.id, p.nome AS paciente, m.nome AS medico, u.nome AS unidade, a.dtconsulta, a.horario
+            SELECT a.id, p.nome AS paciente, m.nome AS medico, u.nome AS unidade, 
+                   dtconsulta, 
+                   DATE_FORMAT(a.horario, '%H:%i') as horario
             FROM agendamentos a
             INNER JOIN cadpaciente p ON a.id_paciente = p.id
             INNER JOIN medicos m ON a.id_medico = m.id

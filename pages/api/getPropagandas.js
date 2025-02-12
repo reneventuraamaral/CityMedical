@@ -10,7 +10,7 @@ export default async function handler(req, res) {
         database: 'marcofri_citymedical', // Nome do banco de dados
       });
 
-      const [rows] = await connection.execute('SELECT id, veiculo, nome, dtcad, id_usuario FROM propagandas');
+      const [rows] = await connection.execute('SELECT id, CONCAT(nome," - ",veiculo) AS nomeveiculo,veiculo, nome, dtcad, id_usuario FROM propagandas');
       res.status(200).json(rows);
       await connection.end();
     } catch (error) {

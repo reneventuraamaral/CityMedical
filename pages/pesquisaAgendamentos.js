@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { useRouter } from 'next/router';
 
+
 export default function PesquisaAgendamentos() {
     const [agendamentos, setAgendamentos] = useState([]);
     const [pacientes, setPacientes] = useState([]);
@@ -56,6 +57,18 @@ export default function PesquisaAgendamentos() {
         }
     };
 
+  // Função para formatar datas  dd/mm/yyyy
+   const formatDate = (dateString) => {
+    if (!dateString) return 'Sem data';
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  
+
     return (
         <Layout>
             <h1>Pesquisa de Agendamentos</h1>
@@ -97,11 +110,12 @@ export default function PesquisaAgendamentos() {
                 <tbody>
                     {agendamentos.length > 0 ? (
                         agendamentos.map((agendamento) => (
-                            <tr key={agendamento.id}>
+                            <tr key={agendamento.id} style={agendamento.id % 2 === 0 ? estilos.linhaPar : estilos.linhaImpar}>
+                            
                                 <td>{agendamento.paciente}</td>
                                 <td>{agendamento.medico}</td>
                                 <td>{agendamento.unidade}</td>
-                                <td>{agendamento.dtconsulta}</td>
+                                <td>{formatDate(agendamento.dtconsulta)}</td>
                                 <td>{agendamento.horario}</td>
                                 <td>
                                     <button onClick={() => handleExcluir(agendamento.id)} style={styles.botaoExcluir}>
@@ -160,3 +174,21 @@ const styles = {
         cursor: 'pointer',
     }
 };
+const estilos = {
+    th: {
+      padding: '10px',
+      border: '1px solid #ddd',
+      textAlign: 'left',
+    },
+    td: {
+      padding: '10px',
+      border: '1px solid #ddd',
+      textAlign: 'left',
+    },
+    linhaPar: {
+      backgroundColor: '#f2f2f2',
+    },
+    linhaImpar: {
+      backgroundColor: '#fff',
+    },
+  };
